@@ -16,6 +16,7 @@ app.use(express.json());
 app.use(morgan("dev"));
 app.use('/uploads/videos', express.static(path.join(__dirname, '../backend/uploads/videos')));
 app.use('/uploads/profile', express.static(path.join(__dirname, '../backend/uploads/profile')));
+app.use('/uploads/profile', express.static(path.join(__dirname, '../backend/uploads/report')));
 
 
 

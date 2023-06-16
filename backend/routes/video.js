@@ -4,6 +4,9 @@ const multer = require('multer');
 const path = require('path');
 const Video = require('../models/video');
 const Category = require('../models/videocategory');
+const Saved = require('../models/saved');
+const History= require('../models/history');
+const Report = require('../models/report');
 const { isValidObjectId } = require("mongoose");
 
 
@@ -207,9 +210,9 @@ router.get('/videos', async (req, res) => {
 });
 
 // Increment view count for a video
-router.put('/incrementviews/:videoId', async (req, res) => {
+router.put('/incrementviews/:videoId/:userId', async (req, res) => {
   try {
-    const { videoId } = req.params;
+    const { videoId,userId } = req.params;
     const video = await Video.findById(videoId);
 
     if (!video) {
@@ -218,8 +221,18 @@ router.put('/incrementviews/:videoId', async (req, res) => {
 
     video.views += 1;
     await video.save();
+    const history = await History.find({ videoId, userId });
 
-    res.status(200).json({ message: 'View count incremented successfully' });
+    if (history.length !== 0) {
+      await History.findOneAndDelete({ videoId, userId });
+    } 
+    const newHistory = new History({
+      videoId,
+      userId,
+    });
+    await newHistory.save();
+    
+    res.status(200).json({ message: 'View count incremented successfully and video saved to history' });
   } catch (error) {
     console.error('Error incrementing view count:', error);
     res.status(500).json({ message: 'Internal Server Error' });
@@ -514,4 +527,128 @@ router.post('/:videoId/dislike/:userId', async (req, res) => {
   }
 });
 
+
+//save video
+router.post('/:videoId/save/:userId', async (req, res) => {
+  try {
+    const { videoId, userId } = req.params;
+    const saved = await Saved.find({ videoId, userId });
+
+    if (saved.length === 0) {
+      const newSaved = new Saved({
+        videoId,
+        userId,
+      });
+
+      await newSaved.save();
+      res.status(201).json({ message: 'Video saved' });
+    } else {
+      await Saved.findOneAndDelete({ videoId, userId });
+      res.status(200).json({ message: 'Video deleted successfully' });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'An error occurred while saving or deleting the video' });
+  }
+});
+ 
+router.get('/:videoId/savestatus/:userId', async (req, res) => {
+  try {
+    const { videoId, userId } = req.params;
+    const saved = await Saved.find({ videoId, userId });
+const status=true;
+    if (saved.length === 0) {
+      res.status(201).json({status:false});
+    } else {
+      
+      res.status(200).json({ status });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'An error occurred on saving' });
+  }
+});
+//add report
+const storagee = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, './uploads/report');
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
+    const extension = path.extname(file.originalname);
+    const Filename = `${file.fieldname}-${uniqueSuffix}${extension}`;
+    cb(null, Filename);
+  },
+});
+
+
+const uploadd= multer({
+  storage: storagee,
+  limits: {
+    fileSize: 1024 * 1024 * 5, // 5MB
+  },
+});
+router.post('/report/:videoId/:userId', uploadd.single('document'), async (req, res) => {
+  try {
+    const { videoId, userId } = req.params; // Retrieve videoId and userId from request parameters
+    const saved = await Report.find({ videoId, userId });
+    if(saved.length===0){
+    // Get the form data from the request body
+    const { reason } = req.body;
+    const filePath = req.file ? req.file.path : null;
+
+    // Create a new instance of the Report model
+    const report = new Report({
+      reason,
+      filePath,
+      userId,
+      videoId
+    });
+
+    // Save the report to the database
+    const savedReport = await report.save();
+
+    // Return a success response with the saved report
+    res.status(200).json(savedReport);}
+    else{
+      res.status(201).json("already reported");
+    }
+  } catch (error) {
+    // Handle any errors that occur during saving
+    res.status(500).json({ error: error });
+  }
+});
+
+
+router.get('/:videoId/reportstatus/:userId', async (req, res) => {
+  try {
+    const { videoId, userId } = req.params;
+    const saved = await Report.find({ videoId, userId });
+const status=true;
+    if (saved.length === 0) {
+      res.status(201).json({status:false});
+    } else {
+      
+      res.status(200).json({ status });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'An error occurred on report' });
+  }
+});
+router.post('/:videoId/unreport/:userId', async (req, res) => {
+  try {
+    const { videoId, userId } = req.params;
+    const saved = await Report.find({ videoId, userId });
+
+    if (saved.length !== 0) {
+      
+      await Report.findOneAndDelete({ videoId, userId });
+      res.status(200).json({ message: 'Report deleted successfully' });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'An error occurred while saving or deleting the video' });
+  }
+});
   module.exports = router;

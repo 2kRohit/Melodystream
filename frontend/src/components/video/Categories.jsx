@@ -4,6 +4,7 @@ import axios from 'axios';
 import Sidebar from './Sidebar';
 import { GoMute, GoUnmute } from 'react-icons/go';
 import { FaUserCircle } from 'react-icons/fa';
+import { useAuth } from '../../hooks';
 
 const HomePage = () => {
     const location = useLocation();
@@ -12,6 +13,9 @@ const HomePage = () => {
   const [categories, setCategories] = useState([]);
   const [videos, setVideos] = useState([]);
   const videoRefs = useRef({});
+  const { authInfo } = useAuth();
+  const { profile } = authInfo;
+  const userId = profile?.id;
 
   
   const fetchCategories = async () => {
@@ -50,7 +54,7 @@ const HomePage = () => {
   
   const handleVideoClick = async (videoId) => {
     try {
-      await axios.put(`http://localhost:8000/api/video/incrementviews/${videoId}`);
+      await axios.put(`http://localhost:8000/api/video/incrementviews/${videoId}/${userId}`);
       navigate(`/viewvideo?videoId=${videoId}`);
     } catch (error) {
       console.error(error);

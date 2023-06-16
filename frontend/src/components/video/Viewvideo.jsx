@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
+
 import { Link, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { FaThumbsUp, FaThumbsDown, FaShare, FaBookmark, FaUserCircle } from 'react-icons/fa';
 import { RiArrowUpSLine, RiArrowDownSLine, RiReplyLine, RiEyeLine, RiCalendarLine,RiSunLine } from 'react-icons/ri';
+import { MdReport} from 'react-icons/md'
 import Sidebar from './Sidebar';
 import { useAuth } from '../../hooks';
 import {TbSun, TbSunOff} from 'react-icons/tb'
@@ -20,12 +22,57 @@ const VideoPage = () => {
   const [commentText, setCommentText] = useState('');
   const [replycommentText, setReplyCommentText] = useState('');
   const [comments, setComments] = useState([]);
-
+const [savestatus,setSavestatus]=useState(false)
   const [replyCommentId, setReplyCommentId] = useState('');
   const [showReplies, setShowReplies] = useState({});
   const [liked, setLiked] = useState(false);
   const [disliked, setDisliked] = useState(false);
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [reasonValue, setReasonValue] = useState('');
+  const [fileValue, setFileValue] = useState(null);
+  const [report,setReport]=useState(false)
+
+  const handleReportClick = () => {
+    setModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalOpen(false);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
   
+    try {
+      const formData = new FormData();
+      formData.append('reason', reasonValue);
+      if (fileValue) {
+        formData.append('document', fileValue);
+      }
+  
+      const response = await axios.post(`http://localhost:8000/api/video/report/${videoId}/${userId}`, formData);
+  
+      if (response.status === 200) {
+        console.log('Report saved successfully');
+        alert('Reported Successfully')
+        setReasonValue('');
+        setFileValue(null);
+        fetchreportStatus()
+        closeModal();
+      }
+      else if(response.status===201){
+        alert('Already Reported')
+        fetchreportStatus()
+        closeModal();
+      } else {
+        console.log('Error saving the report');
+        fetchreportStatus()
+      }
+    } catch (error) {
+      console.log('An error occurred:', error);
+      fetchreportStatus()
+    }
+  };
 
   const fetchVideo = async () => {
     try {
@@ -39,7 +86,7 @@ const VideoPage = () => {
   
       // Combine video data with user data
       const videoWithUserData = { ...videoData, user: userData };
-  
+
       setVideo(videoWithUserData);
     } catch (error) {
       console.error(error);
@@ -167,10 +214,10 @@ const fetchVideoStatus = async () => {
   try {
     const response = await axios.get(`http://localhost:8000/api/video/${videoId}/status/${userId}`);
     const { liked, disliked } = response.data;
-    console.log(response.data)
     setLiked(liked);
     setDisliked(disliked);
     fetchVideo()
+    fetchsavestatus()
   } catch (error) {
     console.error(error);
   }
@@ -206,14 +253,61 @@ const handleShare = async () => {
     console.error('Error sharing:', error);
   }
 };
+const handleSave = async () => {
+  try {
+    const response = await axios.post(`http://localhost:8000/api/video/${videoId}/save/${userId}`);
+  fetchsavestatus()
+  } catch (error) {
+    console.error(error);
+  }
+};
+const fetchsavestatus= async () => {
+  try {
+    const response = await axios.get(`http://localhost:8000/api/video/${videoId}/savestatus/${userId}`);
+  const {status}=response.data
+ 
+  setSavestatus(status)
+  } catch (error) {
+    console.error(error);
+  }
+};
 
+const fetchreportStatus= async () => {
+  try {
+    const response = await axios.get(`http://localhost:8000/api/video/${videoId}/reportstatus/${userId}`);
+  const {status}=response.data
+ 
+  setReport(status)
+  } catch (error) {
+    console.error(error);
+  }
+};
+const handleunreport= async () => {
+  const confirmunreport= window.confirm('Do you want to unreport')
+  if(confirmunreport){
+  try {
+   
+    const response = await axios.post(`http://localhost:8000/api/video/${videoId}/unreport/${userId}`);
+    fetchreportStatus()
+  } catch (error) {
+    console.error(error);
+  }}
+};
 useEffect(()=>{
   fetchVideo()
 fetchComments()
 fetchRelatedVideos()
 fetchVideoStatus()
+
 },[videoId])
 
+useEffect(()=>{
+    
+    fetchVideoStatus()
+    fetchsavestatus()
+    fetchreportStatus()
+  
+}, []); 
 
   return (
     <Sidebar>
@@ -249,29 +343,80 @@ fetchVideoStatus()
     <p>{video.user?.name}</p>
     </>
   )}
-  <div className='ml-72 p-1 mb-0 rounded-full border border-gray-800 bg-black-500'>
+  <div className='ml-60 p-1 mb-0 rounded-full border border-gray-800 bg-black-500'>
   <button
         className={`bg-transparent  rounded-full p-2 mr-2 ${liked ? 'text-blue-400' : 'text-white'}`}
         onClick={handleLike}
       >
-        <TbSun className="inline-block mr-1 text-3xl font-extrabold " />
+        <FaThumbsUp className="inline-block mr-1 text-xl  " />
         {video.likes.length} 
       </button>
       <button
         className={`bg-transparent  rounded-full p-2 mr-2 ${disliked ? 'text-red-700' : 'text-white'}`}
         onClick={handleDislike}
       >
-        <TbSunOff className="inline-block mr-1 text-3xl font-extrabold" />
+        <FaThumbsDown className="inline-block mr-1 text-xl " />
         {video.dislikes.length} 
       </button>
                 <button onClick={handleShare} className="bg-transparent text-white rounded-full p-2 mr-2">
                   <FaShare className="inline-block mr-1 text-xl" />
                   Share
                 </button>
-                <button className="bg-transparent text-white rounded-full p-2 mr-2">
+                <button onClick={handleSave} className={`bg-transparent rounded-full p-2 mr-2 ${savestatus ? 'text-green-400' : 'text-white'}`}>
                   <FaBookmark className="inline-block mr-1 text-xl" />
-                  Save
-                </button></div>
+                 {savestatus? 'Saved':'Save'}
+                </button>
+                 {/*Start  */}
+                
+                 <button
+onClick={report ? handleunreport : handleReportClick}
+        className={`rounded-full p-2 mr-2 ${report ? 'text-orange-400' : 'text-white'}`}
+      >
+        <MdReport className="inline-block mr-1 text-xl" />
+      {report ? 'Reported' : 'Report'}
+      </button>
+
+      {isModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center z-50">
+          <div className="bg-gray-950 rounded-lg p-6 w-96">
+            <h2 className="text-lg font-bold mb-4">Report</h2>
+            <form onSubmit={handleSubmit}>
+              <div className="mb-6">
+                <label className="block mb-1">Reason:</label>
+                <textarea
+                  value={reasonValue}
+                  onChange={(e) => setReasonValue(e.target.value)}
+                  className="border border-gray-300 rounded p-2 w-full bg-gray-950 text-white h-32"
+                  required
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block mb-1">Upload Document (if any):</label>
+                <input
+                  type="file"
+                  onChange={(e) => setFileValue(e.target.files[0])}
+                  accept=".doc,.docx,.pdf"
+                  className="border border-gray-300 rounded p-2 w-full"
+                />
+              </div>
+              <div className="flex justify-end">
+                <button type="submit" className="bg-blue-500 text-white rounded px-4 py-2">
+                  Submit
+                </button>
+                <button
+                  type="button"
+                  className="bg-gray-200 text-gray-700 rounded px-4 py-2 ml-2"
+                  onClick={closeModal}
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+                {/*end  */}
+                </div>
               </div>
               
 
