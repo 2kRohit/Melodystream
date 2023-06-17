@@ -7,15 +7,26 @@ import { FaUserCircle } from 'react-icons/fa';
 
 export default function Sidebar({ children }) {
   const navigate = useNavigate();
-  const { authInfo } = useAuth();
+  
+  const { authInfo,handleLogout } = useAuth();
   const { isLoggedIn } = authInfo;
   const isVerified = authInfo.profile?.isVerified;
   const [search,setSearch]=useState();
   const handleChange = (e) => {
-    
     setSearch(e.target.value);
   };
-
+  const logout = () => {
+    handleLogout();
+    isuser()
+    window.location.href = '/';
+  };
+  const isuser=()=>{
+    const token = localStorage.getItem("auth-token");
+    if (!token) navigate('/');
+  }
+  useEffect(()=>{
+    isuser()
+  },[])
   const handleSubmit = async (e) => {
     e.preventDefault();
     navigate(`/search?q=${search}`)
@@ -60,6 +71,16 @@ export default function Sidebar({ children }) {
             <li>
               <Link to="/addcategory" className="block bg-gray-700 py-2 px-4 rounded-md hover:bg-gray-600">
                 Add Category
+              </Link>
+            </li>
+            <li>
+              <Link to="/viewhistory" className="block bg-gray-700 py-2 px-4 rounded-md hover:bg-gray-600">
+                View History
+              </Link>
+            </li>
+            <li>
+              <Link to="/viewsaved" className="block bg-gray-700 py-2 px-4 rounded-md hover:bg-gray-600">
+                Saved Videos
               </Link>
             </li>
             <li>
@@ -120,11 +141,11 @@ onChange={handleChange}
               <img
                 src={`http://localhost:8000/uploads/profile/${authInfo.profile.profilePicture}`}
                 alt="Profile"
-                className="h-8 w-8 rounded-full"
+                className="h-9 w-9 rounded-full"
                 onClick={toggleDropdownn}
               />
             ) : (<button onClick={toggleDropdownn}> 
-             <FaUserCircle className="w-8 h-8 text-gray-500 mr-2" /></button>
+             <FaUserCircle className="w-9 h-9 text-gray-500 mr-2" /></button>
             )}
             
             <div className="relative inline-block ml-2">
@@ -140,7 +161,9 @@ onChange={handleChange}
                   >
                     Profile
                   </Link>
-                  
+                  <Link onClick={logout}  className="block px-4 py-2 text-white hover:bg-gray-800">
+                    Logout
+                  </Link>
                 </div>
               )}
             </div>

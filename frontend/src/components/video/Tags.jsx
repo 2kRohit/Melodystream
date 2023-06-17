@@ -196,8 +196,8 @@ const HomePage = () => {
                   )}
                   <h3 className="text-lg font-bold ml-2">{video.title}</h3>
                 </div>
-                <p className="text-gray-500">{video.user.name}</p>
-                <p className="text-gray-500">{video.views} views  &bull; <span className="text-gray-500">{formatDateTime(video.timestamp)}</span></p>
+                <p className="text-gray-500 ml-12">{video.user.name}</p>
+                <p className="text-gray-500  ml-12">{video.views} views  &bull; <span className="text-gray-500">{formatDateTime(video.timestamp)}</span></p>
                
               </div>
             </div>

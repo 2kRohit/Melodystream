@@ -370,7 +370,7 @@ useEffect(()=>{
                 
                  <button
 onClick={report ? handleunreport : handleReportClick}
-        className={`rounded-full p-2 mr-2 ${report ? 'text-orange-400' : 'text-white'}`}
+        className={`rounded-full p-2 mr-2 ${report ? 'text-orange-700' : 'text-white'}`}
       >
         <MdReport className="inline-block mr-1 text-xl" />
       {report ? 'Reported' : 'Report'}
@@ -378,7 +378,7 @@ onClick={report ? handleunreport : handleReportClick}
 
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center z-50">
-          <div className="bg-gray-950 rounded-lg p-6 w-96">
+          <div className="bg-gray-800 rounded-lg p-6 w-96">
             <h2 className="text-lg font-bold mb-4">Report</h2>
             <form onSubmit={handleSubmit}>
               <div className="mb-6">
@@ -386,7 +386,7 @@ onClick={report ? handleunreport : handleReportClick}
                 <textarea
                   value={reasonValue}
                   onChange={(e) => setReasonValue(e.target.value)}
-                  className="border border-gray-300 rounded p-2 w-full bg-gray-950 text-white h-32"
+                  className="border border-gray-300 rounded p-2 w-full bg-white text-black h-32"
                   required
                 />
               </div>
@@ -400,7 +400,7 @@ onClick={report ? handleunreport : handleReportClick}
                 />
               </div>
               <div className="flex justify-end">
-                <button type="submit" className="bg-blue-500 text-white rounded px-4 py-2">
+                <button type="submit" className="bg-blue-800 text-white rounded px-4 py-2">
                   Submit
                 </button>
                 <button

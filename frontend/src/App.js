@@ -21,6 +21,8 @@ import Profile from "./components/video/Profile";
 import Categories from "./components/video/Categories";
 import Search from "./components/video/Search";
 import Tag from "./components/video/Tags";
+import Viewhistory from "./components/video/Viewhistory";
+import Viewsaved from "./components/video/Viewsaved";
 export default function App() {
   return (
     <>
@@ -45,6 +47,8 @@ export default function App() {
         <Route path="/categories" element={<Categories/>} />
         <Route path="/search" element={<Search/>} />
         <Route path="/tag" element={<Tag/>} />
+        <Route path="/viewhistory" element={<Viewhistory/>} />
+        <Route path="/viewsaved" element={<Viewsaved/>} />
         <Route path="*" element={<NotFound />} />
 
       </Routes>

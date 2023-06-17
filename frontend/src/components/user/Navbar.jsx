@@ -31,7 +31,8 @@ export default function Navbar() {
            
 {isLoggedIn ? (<>
    <Link to='/auth/video' className="text-white hover:text-gray-300 px-3 py-2 rounded-md text-sm font-medium">Video</Link>
-   <Link to='/auth/music' className="text-white hover:text-gray-300 px-3 py-2 rounded-md text-sm font-medium">Music</Link>           <button
+   <Link to='/auth/music' className="text-white hover:text-gray-300 px-3 py-2 rounded-md text-sm font-medium">Music</Link>           
+   <button
                   onClick={handleLogout}
                   className="text-white hover:text-gray-300 px-3 py-2 rounded-md text-sm font-medium"
                 >

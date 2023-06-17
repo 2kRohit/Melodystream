@@ -651,4 +651,80 @@ router.post('/:videoId/unreport/:userId', async (req, res) => {
     res.status(500).json({ message: 'An error occurred while saving or deleting the video' });
   }
 });
+//viewhistory
+router.get('/viewhistory/:userId', async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    const history = await History.find({ userId })
+      .populate({
+        path: 'videoId',
+        model: 'Video',
+        select: { timestamp: 0 } // Include the timestamp field from the video model
+      })
+      .select('timestamp videoId')
+      .exec();
+
+    const processedData = history.map(item => ({
+      ...item.videoId.toObject(), // Convert the populated videoId to a plain object
+      timestamp: item.timestamp
+    }));
+
+    res.status(200).json(processedData);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'An error occurred while fetching history' });
+  }
+});
+
+router.get('/viewsaved/:userId', async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    const history = await Saved.find({ userId })
+      .populate({
+        path: 'videoId',
+        model: 'Video',
+        select: { timestamp: 0 } // Include the timestamp field from the video model
+      })
+      .select('timestamp videoId')
+      .exec();
+
+    const processedData = history.map(item => ({
+      ...item.videoId.toObject(), // Convert the populated videoId to a plain object
+      timestamp: item.timestamp
+    }));
+
+    res.status(200).json(processedData);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'An error occurred while fetching saved' });
+  }
+});
+
+router.delete('/historydelete/:videoId/:userId', async (req, res) => {
+  try {
+    const { videoId, userId } = req.params;
+    
+      await History.findOneAndDelete({ videoId, userId });
+      res.status(200).json({ message: 'History deleted successfully' });
+    
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'An error occurred while saving or deleting the history' });
+  }
+});
+
+router.delete('/clearhistory/:userId', async (req, res) => {
+  try {
+    const { userId } = req.params;
+    
+      await History.deleteMany({ userId });
+      res.status(200).json({ message: 'History deleted successfully' });
+    
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'An error occurred while saving or deleting the history' });
+  }
+});
   module.exports = router;

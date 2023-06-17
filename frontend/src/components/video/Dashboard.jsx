@@ -193,7 +193,7 @@ const HomePage = () => {
                 <div className="flex items-center mb-2">
                   {video.user && video.user.profilePicture ? (
                     <img
-                      className="w-8 h-8 rounded-full mr-2"
+                      className="w-8 h-8 rounded-full mr-2 "
                       src={`http://localhost:8000/uploads/profile/${video.user.profilePicture}`}
                       alt="Profile"
                     />
@@ -202,8 +202,8 @@ const HomePage = () => {
                   )}
                   <h3 className="text-lg font-bold ml-2">{video.title}</h3>
                 </div>
-                <p className="text-gray-500">{video.user.name}</p>
-                <p className="text-gray-500">{video.views} views  &bull; <span className="text-gray-500">{formatDateTime(video.timestamp)}</span></p>
+                <p className="text-gray-500 ml-12">{video.user.name}</p>
+                <p className="text-gray-500 ml-12">{video.views} views  &bull; <span className="text-gray-500">{formatDateTime(video.timestamp)}</span></p>
                
               </div>
             </div>
