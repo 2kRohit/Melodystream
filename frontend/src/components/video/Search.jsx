@@ -138,7 +138,7 @@ const HomePage = () => {
     <Sidebar>
       <div className="container mx-auto bg-gray-900 text-white">
         {/* Categories */}
-        <h1 className="text-3xl font-bold text-white mb-8 text-center w-full">Search Results</h1>  
+        <h1 className='text-center text-3xl text-blue-500 italic p-0 mb-2 mt-0 font-semibold'>Search Results</h1>
         {/* Videos */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 mt-0">
         {videos.length === 0 ? (

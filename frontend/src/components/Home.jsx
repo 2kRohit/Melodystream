@@ -2,6 +2,7 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks';
 import Container from './Container';
+import Navbar from './user/Navbar';
 
 const Home = () => {
   const { authInfo } = useAuth();
@@ -15,6 +16,8 @@ const Home = () => {
   };
 
   return (
+    <>
+    <Navbar />
     <div className="bg-gray-900 dark:bg-gray-900 min-h-screen flex items-center justify-center">
       <Container>
         {isLoggedIn && !isVerified ? (
@@ -71,7 +74,7 @@ const Home = () => {
           </div>
         )}
       </Container>
-    </div>
+    </div></>
   );
 };
 

@@ -9,6 +9,7 @@ import FormContainer from "../form/FormContainer";
 import FormInput from "../form/FormInput";
 import Submit from "../form/Submit";
 import Title from "../form/Title";
+import Navbar from "../user/Navbar";
 
 export default function ForgetPassword() {
   const [email, setEmail] = useState("");
@@ -31,6 +32,8 @@ export default function ForgetPassword() {
   };
 
   return (
+    <>
+    <Navbar />
     <FormContainer>
       <Container>
         <form onSubmit={handleSubmit} className={commonModalClasses + " w-96"}>
@@ -51,5 +54,6 @@ export default function ForgetPassword() {
         </form>
       </Container>
     </FormContainer>
+    </>
   );
 }

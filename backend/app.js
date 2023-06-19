@@ -8,6 +8,8 @@ require("dotenv").config();
 require("./db");
 const userRouter = require("./routes/user");
 const videoRouter = require("./routes/video");
+const adminRouter=require('./routes/admin');
+const verifierRouter=require('./routes/verifier')
 const { handleNotFound } = require("./utils/helper");
 
 const app = express();
@@ -23,6 +25,8 @@ app.use('/uploads/profile', express.static(path.join(__dirname, '../backend/uplo
 
 app.use("/api/user", userRouter);
 app.use("/api/video", videoRouter);
+app.use("/api/admin", adminRouter);
+app.use("/api/verifier", verifierRouter);
 app.use("/*", handleNotFound);
 
 app.use(errorHandler);

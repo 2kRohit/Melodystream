@@ -15,7 +15,7 @@ import Unverifiedvideos from "./components/video/Unverifiedvideos";
 import ViewUnverifiedVideos from "./components/video/viewUnverifiedvideos";
 import Verifiedvideos from "./components/video/Verifiedvideos";
 import ViewverifiedVideos from "./components/video/Viewverifiedvideos";
-import CategoryForm from "./components/video/Category";
+import CategoryForm from "./components/Admin/Category";
 import Viewvideo from "./components/video/Viewvideo";
 import Profile from "./components/video/Profile";
 import Categories from "./components/video/Categories";
@@ -23,10 +23,16 @@ import Search from "./components/video/Search";
 import Tag from "./components/video/Tags";
 import Viewhistory from "./components/video/Viewhistory";
 import Viewsaved from "./components/video/Viewsaved";
+import Admindashboard from "./components/Admin/Dashboard";
+import Verifierdashboard from "./components/Verifier/Dashboard";
+import Adminuser from "./components/Admin/User";
+import Adminverifier from "./components/Admin/Verifier";
+import Adminvideos from "./components/Admin/Videos";
+import Adminviewvideos from "./components/Admin/Viewvideo";
 export default function App() {
   return (
     <>
-      <Navbar />
+     
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/auth/signin" element={<Signin />} />
@@ -49,6 +55,12 @@ export default function App() {
         <Route path="/tag" element={<Tag/>} />
         <Route path="/viewhistory" element={<Viewhistory/>} />
         <Route path="/viewsaved" element={<Viewsaved/>} />
+        <Route path="admin/dashboard" element={<Admindashboard/>} />
+        <Route path="verifier/dashboard" element={<Verifierdashboard/>} />
+        <Route path="admin/User" element={<Adminuser/>} />
+        <Route path="admin/Verifier" element={<Adminverifier/>} />
+        <Route path="admin/videos" element={<Adminvideos/>} />
+        <Route path="admin/viewvideos" element={<Adminviewvideos/>} />
         <Route path="*" element={<NotFound />} />
 
       </Routes>

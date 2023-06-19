@@ -4,11 +4,12 @@ import { Link, useLocation } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import SidebarForm from './SidebarForm';
 
-const ViewverifiedVideos = () => {
+const ViewVerifiedVideos = () => {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const videoId = searchParams.get('videoId');
   const [video, setVideo] = useState(null);
+  const [report, setreport] = useState(null);
   const videoRef = useRef(null);
 
   const fetchVideo = async () => {
@@ -20,9 +21,18 @@ const ViewverifiedVideos = () => {
       console.error('Error fetching video:', error);
     }
   };
+  const reports=async ()=>{
+    try{
+      const response = await axios.get(`http://localhost:8000/api/video/${videoId}/reportsbyvideo`);
+      setreport(response.data)
+    } catch (error) {
+      console.error('Error fetching reports:', error);
+    }
+  }
 
   useEffect(() => {
     fetchVideo();
+    reports();
   }, []);
 
   const handleVideoLoaded = () => {
@@ -62,7 +72,7 @@ const ViewverifiedVideos = () => {
       if (!confirmed) {
         return;
       }
-      
+
       const response = await axios.patch(`http://localhost:8000/api/video/changevisibility/${videoId}`, {
         visibility: newVisibility,
       });
@@ -76,6 +86,7 @@ const ViewverifiedVideos = () => {
   if (!video) {
     return (
       <Sidebar>
+         <h1 className='text-center text-3xl text-blue-600 italic p-2 mb-1 mt-1'>Video Details</h1>
         <div className="flex items-center justify-center h-full">
           <p className="text-gray-500 text-xl">Loading...</p>
         </div>
@@ -85,11 +96,12 @@ const ViewverifiedVideos = () => {
 
   return (
     <SidebarForm>
+      <h1 className='text-center text-3xl text-blue-500 italic p-2 mb-1 mt-1 font-semibold'>Video Details</h1>
       <div className="flex justify-center items-center h-full">
-        <div className="max-w-5xl w-full bg-gray-800 rounded-lg overflow-hidden">
+        <div className="max-w-6xl w-full bg-gray-800 rounded-lg overflow-hidden">
           <div className="flex">
             <div className="w-2/3">
-              <div className="relative" style={{ maxWidth: '100%', height: '0', paddingBottom: '70%' }}>
+              <div className="relative" style={{ paddingTop: '56.25%' }}>
                 <video
                   className="absolute inset-0 w-full h-full object-cover"
                   controls
@@ -100,19 +112,22 @@ const ViewverifiedVideos = () => {
                   <source src={`http://localhost:8000/${video.videoPath}`} type="video/mp4" />
                   Your browser does not support the video tag.
                 </video>
+                
               </div>
-            </div>
+            </div> 
             <div className="w-1/3 bg-gray-900 px-6 py-4">
               {video.thumbnailPath && (
                 <div className="flex justify-center items-center mb-4">
                   <img
                     src={`http://localhost:8000/${video.thumbnailPath}`}
                     alt="Thumbnail"
-                    className="h-32 w-32 rounded-md shadow-lg"
+                    className="h-40 w-40 rounded-md shadow-lg"
                   />
+                   
                 </div>
               )}
-              <h1 className="text-3xl font-bold text-white mb-4">{video.title}</h1>
+             
+              <h1 className="text-4xl font-bold text-white mb-4">{video.title}</h1>
               <p className="text-gray-300 text-lg">{video.description}</p>
               <div className="flex items-center mt-4">
                 <span className="text-gray-500 text-sm">Category:</span>
@@ -128,18 +143,19 @@ const ViewverifiedVideos = () => {
                 <span className="text-gray-500 text-sm">Upload Date:</span>
                 <span className="text-gray-300 text-sm ml-2">{formatDateTime(video.timestamp)}</span>
               </div>
-              <div className="flex items-center mt-2">
+              <div className="flex items-center mt-1">
                 <span className="text-gray-500 text-sm">Tags:</span>
                 <div className="flex flex-wrap ml-2">
-                {video.tags && video.tags.split(',').map((tag, index) => (
-                    <Link
-                      key={index}
-                      to={`/tag?q=${tag.trim()}`}
-                      className="text-blue-600 text-lg bg-transparent px-0 py-1 rounded-md mr-1 mb-1"
-                    >
-                      #{tag.trim()}
-                    </Link>
-                  ))}
+                  {video.tags &&
+                    video.tags.split(',').map((tag, index) => (
+                      <Link
+                        key={index}
+                        to={`/tag?q=${tag.trim()}`}
+                        className="text-blue-600 text-lg bg-transparent px-0 py-0 rounded-md mr-1 mb-0"
+                      >
+                        #{tag.trim()}
+                      </Link>
+                    ))}
                 </div>
               </div>
               <div className="flex items-center mt-2">
@@ -147,12 +163,21 @@ const ViewverifiedVideos = () => {
                 <span className="text-gray-300 text-sm ml-2">{video.views}</span>
               </div>
               <div className="flex items-center mt-2">
+                <Link to={`/viewvideo?videoId=${video._id}`}>
                 <span className="text-gray-500 text-sm">Comments:</span>
-                <span className="text-gray-300 text-sm ml-2">{video.comments.length}</span>
+                <span className="text-gray-300 text-sm ml-2">{video.comments.length}</span></Link>
               </div>
               <div className="flex items-center mt-2">
                 <span className="text-gray-500 text-sm">Likes:</span>
-                <span className="text-gray-300 text-sm ml-2">{video.likes}</span>
+                <span className="text-gray-300 text-sm ml-2">{video.likes.length}</span>
+              </div>
+              <div className="flex items-center mt-2">
+                <span className="text-gray-500 text-sm">Dislikes:</span>
+                <span className="text-gray-300 text-sm ml-2">{video.dislikes.length}</span>
+              </div>
+              <div className="flex items-center mt-2">
+                <span className="text-gray-500 text-sm">Reports:</span>
+                <span className="text-gray-300 text-sm ml-2">{report ? report.length : 'Loading...'}</span>
               </div>
               <div className="mt-4">
                 <button
@@ -162,7 +187,9 @@ const ViewverifiedVideos = () => {
                   {video.visibility === 'public' ? 'Make Private' : 'Make Public'}
                 </button>
               </div>
+              
             </div>
+           
           </div>
           {/* Add necessary components based on your logic */}
         </div>
@@ -171,4 +198,4 @@ const ViewverifiedVideos = () => {
   );
 };
 
-export default ViewverifiedVideos;
+export default ViewVerifiedVideos;

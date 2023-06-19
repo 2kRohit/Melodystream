@@ -139,7 +139,7 @@ const HomePage = () => {
     <Sidebar>
       <div className="container mx-auto bg-gray-900 text-white">
         {/* Categories */}
-        <h1 className="text-3xl font-bold text-white mb-8 text-center w-full">Saved Videos</h1>  
+        <h1 className='text-center text-3xl text-blue-500 italic p-0 mb-1 mt-0 font-semibold'>Saved Videos</h1> 
         {/* Videos */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 mt-0">
         {videos.length === 0 ? (
@@ -193,7 +193,7 @@ const HomePage = () => {
                   <h3 className="text-lg font-bold ml-2">{video.title}</h3>
                 </div>
                 <p className="text-gray-500 ml-12">{video.user.name}</p>
-                <p className="text-gray-500 ml-12">Watched  &bull; <span className="text-gray-500">{formatDateTime(video.timestamp)}</span></p>
+                <p className="text-gray-500 ml-12">Saved  &bull; <span className="text-gray-500">{formatDateTime(video.timestamp)}</span></p>
                
               </div>
             </div>

@@ -5,7 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks';
 import { FaUserCircle } from 'react-icons/fa';
 import {MdDashboard, MdLibraryAdd, MdLogout, MdOutlineSettings, MdOutlineSettingsSuggest, MdVideoLibrary} from "react-icons/md"
-import {RiUserSettingsFill, RiVideoUploadLine} from "react-icons/ri"
+import {RiDashboardFill, RiUserFill, RiUserFollowFill, RiUserSettingsFill, RiVideoUploadLine} from "react-icons/ri"
 import {GiHamburgerMenu} from "react-icons/gi"
 import {IoMdArrowDropdown, IoMdSettings} from "react-icons/io"
 import {FiSave} from "react-icons/fi"
@@ -27,7 +27,7 @@ export default function Sidebar({ children }) {
   };
   const isuser=()=>{
     const token = localStorage.getItem("auth-token");
-    if (!token) navigate('/');
+    if (!token || authInfo.profile?.role!=="admin") navigate('/');
     
   }
   useEffect(()=>{
@@ -73,12 +73,12 @@ export default function Sidebar({ children }) {
                 src={`http://localhost:8000/uploads/profile/${authInfo.profile.profilePicture}`}
                 alt="Profile"
                 className="h-24 w-24 rounded-full mx-auto"
-                onClick={toggleDropdownn}
+               
               />
              <div className=''> {authInfo.profile?.name}</div>
              <div className=''> {authInfo.profile?.email}</div></>
-            ) : (<><button onClick={toggleDropdownn}> 
-             <FaUserCircle className="w-24 h-24 text-gray-500 mx-auto" /></button>
+            ) : (<>
+             <FaUserCircle className="w-24 h-24 text-gray-500 mx-auto" />
               <div className=''> {authInfo.profile?.name}</div>
               <div className=''> {authInfo.profile?.email}</div>
               </>
@@ -87,46 +87,41 @@ export default function Sidebar({ children }) {
           <ul className="space-y-2">
             
             <li>
-              <Link to="/auth/video" className="block bg-transparent py-1  px-4 rounded-md hover:bg-gray-600">
-                <span className='flex items-center text-base ml-4'> <MdVideoLibrary/><span className='ml-4'>Dashboard</span></span>
+              <Link to="/admin/dashboard" className="block bg-transparent py-1  px-4 rounded-md hover:bg-gray-600">
+                <span className='flex items-center text-base ml-4'> <RiDashboardFill/><span className='ml-4'>Dashboard</span></span>
               </Link>
             </li>
             <li>
-              <Link to="/auth/upload-video" className="block bg-transparent py-1  px-4 rounded-md hover:bg-gray-600">
-              <span className='flex items-center text-base ml-4'> <RiVideoUploadLine/><span className='ml-4'>Upload Video</span></span>
+              <Link to="/admin/user" className="block bg-transparent py-1  px-4 rounded-md hover:bg-gray-600">
+                <span className='flex items-center text-base ml-4'> <RiUserFill/><span className='ml-4'>User</span></span>
+              </Link>
+            </li>
+            <li>
+              <Link to="/admin/verifier" className="block bg-transparent py-1  px-4 rounded-md hover:bg-gray-600">
+                <span className='flex items-center text-base ml-4'> <RiUserFollowFill/><span className='ml-4'>Verifier</span></span>
               </Link>
             </li>
            
-            <li>
-              <Link to="/viewhistory" className="block bg-transparent py-1  px-4 rounded-md hover:bg-gray-600">
-              <span className='flex items-center text-base ml-4'> <FaHistory/><span className='ml-4'>View History</span></span>
-              </Link>
-            </li>
-            <li>
-              <Link to="/viewsaved" className="block bg-transparent py-1  px-4 rounded-md hover:bg-gray-600">
-              <span className='flex items-center text-base ml-4'> <FiSave/><span className='ml-4'>Saved Videos</span></span>
-              </Link>
-            </li>
             <li>
               <a
                 className="block bg-transparent py-1  px-4 rounded-md hover:bg-gray-600 flex items-center"
                 onClick={toggleDropdown}
               >
-             <span className='flex items-center text-base ml-4'> <FaFileVideo/><span className='ml-4'>My Videos</span></span>
+             <span className='flex items-center text-base ml-4'> <FaFileVideo/><span className='ml-4'>Videos</span></span>
                 <IoMdArrowDropdown className={`ml-1 mt-1 transform ${showDropdown ? 'rotate-180' : ''}`} />
               </a>
               <ul className={`mt-0 ml-12 bg-gray-800  space-y-1 ${showDropdown ? '' : 'hidden'}`}>
                 <li>
                   <Link
-                    to="/auth/unverified-videos"
+                    to="/addcategory"
                     className="block bg-transparent py-1 border-b-0 px-4 hover:bg-gray-600"
                   >
-                    Unverified Videos
+                   Category
                   </Link>
                 </li>
                 <li>
-                  <Link to="/auth/verified-videos" className="block bg-transparent py-1  px-4 border-b-0 hover:bg-gray-600">
-                    Verified Videos
+                  <Link to="/admin/videos" className="block bg-transparent py-1  px-4 border-b-0 hover:bg-gray-600">
+                     Videos
                   </Link>
                 </li>
               </ul>

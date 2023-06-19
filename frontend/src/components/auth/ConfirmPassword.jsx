@@ -9,6 +9,7 @@ import Submit from "../form/Submit";
 import Title from "../form/Title";
 import { resetPassword, verifyPasswordResetToken } from "../../api/auth";
 import { useNotification } from "../../hooks";
+import Navbar from "../user/Navbar";
 
 export default function ConfirmPassword() {
   const [password, setPassword] = useState({
@@ -76,6 +77,8 @@ export default function ConfirmPassword() {
 
   if (isVerifying)
     return (
+      <>
+      <Navbar />
       <FormContainer>
         <Container>
           <div className="flex space-x-2 items-center">
@@ -85,21 +88,25 @@ export default function ConfirmPassword() {
             <ImSpinner3 className="animate-spin text-4xl dark:text-white text-primary" />
           </div>
         </Container>
-      </FormContainer>
+      </FormContainer></>
     );
 
   if (!isValid)
     return (
+      <>
+      <Navbar />
       <FormContainer>
         <Container>
           <h1 className="text-4xl font-semibold dark:text-white text-primary">
             Sorry the token is invalid!
           </h1>
         </Container>
-      </FormContainer>
+      </FormContainer></>
     );
 
   return (
+    <>
+    <Navbar />
     <FormContainer>
       <Container>
         <form onSubmit={handleSubmit} className={commonModalClasses + " w-96"}>
@@ -123,6 +130,6 @@ export default function ConfirmPassword() {
           <Submit value="Confirm Password" />
         </form>
       </Container>
-    </FormContainer>
+    </FormContainer></>
   );
 }

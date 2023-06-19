@@ -636,6 +636,17 @@ const status=true;
     res.status(500).json({ message: 'An error occurred on report' });
   }
 });
+router.get('/:videoId/reportsbyvideo', async (req, res) => {
+  try {
+    const { videoId } = req.params;
+    const saved = await Report.find({ videoId });
+      res.status(201).json(saved);
+    
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'An error occurred on report' });
+  }
+});
 router.post('/:videoId/unreport/:userId', async (req, res) => {
   try {
     const { videoId, userId } = req.params;
@@ -725,6 +736,64 @@ router.delete('/clearhistory/:userId', async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'An error occurred while saving or deleting the history' });
+  }
+});
+router.delete('/:videoId/commentdelete/:commentId', async (req, res) => {
+  const { videoId, commentId } = req.params;
+
+  try {
+    // Find the video by ID and update it to remove the comment
+    const video = await Video.findByIdAndUpdate(
+      videoId,
+      {
+        $pull: {
+          comments: { _id: commentId },
+        },
+      },
+      { new: true }
+    );
+
+    if (video) {
+      console.log('Comment deleted successfully');
+      res.status(200).json({ message: 'Comment deleted successfully' });
+    } else {
+      console.log('Video not found');
+      res.status(404).json({ error: 'Video not found' });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+router.delete('/:videoId/replydelete/:commentId/:replyId', async (req, res) => {
+  const { videoId, commentId, replyId } = req.params;
+
+  try {
+    // Find the video by ID and update it to remove the reply
+    const video = await Video.findByIdAndUpdate(
+      videoId,
+      {
+        $pull: {
+          'comments.$[comment].replies': { _id: replyId },
+        },
+      },
+      {
+        arrayFilters: [{ 'comment._id': commentId }],
+        new: true,
+      }
+    );
+
+    if (video) {
+      console.log('Reply deleted successfully');
+      res.status(200).json({ message: 'Reply deleted successfully' });
+    } else {
+      console.log('Video not found');
+      res.status(404).json({ error: 'Video not found' });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Server error' });
   }
 });
   module.exports = router;

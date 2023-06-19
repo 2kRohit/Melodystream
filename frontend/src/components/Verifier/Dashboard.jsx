@@ -1,35 +1,40 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Sidebar from './Sidebar';
-import { GoMute, GoTrashcan, GoUnmute } from 'react-icons/go';
+import { GoMute, GoUnmute } from 'react-icons/go';
 import { FaUserCircle } from 'react-icons/fa';
 import { useAuth } from '../../hooks';
-import {TiDelete, TiDeleteOutline} from "react-icons/ti"
+
 const HomePage = () => {
-    const location = useLocation();
-  const searchParams = new URLSearchParams(location.search);
-  const q = searchParams.get('q');
+  const [categories, setCategories] = useState([]);
+  const [videos, setVideos] = useState([]);
+  const videoRefs = useRef({});
   const { authInfo } = useAuth();
   const { profile } = authInfo;
   const userId = profile?.id;
-  const [videos, setVideos] = useState([]);
-  const videoRefs = useRef({});
 
-  
-  
+  useEffect(() => {
+    fetchCategories();
+    fetchVideos();
+  }, []);
+
+  const fetchCategories = async () => {
+    try {
+      const response = await axios.get('http://localhost:8000/api/video/getcategories');
+      setCategories(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const navigate = useNavigate();
 
   const fetchVideos = async () => {
     try {
-      const response = await axios.get(`http://localhost:8000/api/video/viewhistory/${userId}`);
-      // Access the 'data' property of the response object
-  
-      const responseData = response.data;
-     
+      const response = await axios.get('http://localhost:8000/api/video/videos');
       // Set a default value for the 'muted' property if not provided in the response
-      const videosWithDefaults = responseData.map(async (video) => {
+      const videosWithDefaults = response.data.map(async (video) => {
         const userResponse = await axios.get(`http://localhost:8000/api/user/${video.userId}`);
         const user = userResponse.data;
         return {
@@ -44,7 +49,7 @@ const HomePage = () => {
       console.error(error);
     }
   };
-  
+
   const handleVideoClick = async (videoId) => {
     try {
       await axios.put(`http://localhost:8000/api/video/incrementviews/${videoId}/${userId}`);
@@ -53,8 +58,6 @@ const HomePage = () => {
       console.error(error);
     }
   };
-  //category click
-  
 
   const handleVideoMouseEnter = (videoId) => {
     const video = videoRefs.current[videoId];
@@ -82,9 +85,6 @@ const HomePage = () => {
       );
     }
   };
- useEffect(()=>{
-    fetchVideos()
- },[q])
 
   const formatDateTime = (timestamp) => {
     const date = new Date(timestamp);
@@ -134,48 +134,32 @@ const HomePage = () => {
       return `${duration} sec`;
     }
   };
-  const deletehistory = async (videoId) => {
-    const done=window.confirm("do you want to clear the history")
-    if(done){
-    try {
-      await axios.delete(`http://localhost:8000/api/video/historydelete/${videoId}/${userId}`);
-      fetchVideos()
-    } catch (error) {
-      console.error(error);
-    }}
-  };
-
-  const clearhistory = async () => {
-    const done=window.confirm("do you want to clear all the history")
-    if(done){
-    try {
-      await axios.delete(`http://localhost:8000/api/video/clearhistory/${userId}`);
-      fetchVideos()
- 
-    } catch (error) {
-      console.error(error);
-    }}
-  };
 
   return (
     <Sidebar>
       <div className="container mx-auto bg-gray-900 text-white">
         {/* Categories */}
-        <h1 className='text-center text-3xl text-blue-500 italic p-0 mb-1 mt-0 font-semibold'>Watch History</h1> 
-        <div onClick={clearhistory} className='text-red-500 -mt-9 mb-4 hover:text-red-700 cursor-pointer'> {videos.length !== 0 ?'clear all':''}</div> 
+        <div className="flex justify-center mt-0">
+          <div className="flex space-x-4">
+            {categories.map((category) => (
+              <div
+                key={category._id}
+                className="bg-gray-800 p-2 rounded-lg cursor-pointer hover:bg-gray-700 transition duration-200"
+              >
+                <Link to={`/categories?category=${category.name}`} className="text-white">
+                  {category.name}
+                </Link>
+              </div>
+            ))}
+          </div>
+        </div>
+
         {/* Videos */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 mt-0">
-        {videos.length === 0 ? (
-    <div className="text-center text-gray-500">
-      No videos found.
-    </div>
-  ) : ( videos.map((video) => (
-    <div className="bg-transparent rounded-lg cursor-pointer 
-    transition duration-200 shadow-lg">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 mt-4">
+          {videos.map((video) => (
             <div
-            className='hover:bg-gray-700'
               key={video._id}
-              
+              className="bg-transparent rounded-lg cursor-pointer hover:bg-gray-700 transition duration-200 shadow-lg"
               onClick={() => handleVideoClick(video._id)}
               onMouseEnter={() => handleVideoMouseEnter(video._id)}
               onMouseLeave={() => handleVideoMouseLeave(video._id)}
@@ -209,7 +193,7 @@ const HomePage = () => {
                 <div className="flex items-center mb-2">
                   {video.user && video.user.profilePicture ? (
                     <img
-                      className="w-8 h-8 rounded-full mr-2"
+                      className="w-8 h-8 rounded-full mr-2 "
                       src={`http://localhost:8000/uploads/profile/${video.user.profilePicture}`}
                       alt="Profile"
                     />
@@ -219,11 +203,11 @@ const HomePage = () => {
                   <h3 className="text-lg font-bold ml-2">{video.title}</h3>
                 </div>
                 <p className="text-gray-500 ml-12">{video.user.name}</p>
-                <p className="text-gray-500 ml-12">Watched  &bull; <span className="text-gray-500">{formatDateTime(video.timestamp)}</span></p>
+                <p className="text-gray-500 ml-12">{video.views} views  &bull; <span className="text-gray-500">{formatDateTime(video.timestamp)}</span></p>
                
               </div>
-            </div> <div onClick={() => {deletehistory(video._id);}} className=' mr-1 mb-0 -mt-9 text-blue-500 text-right hover:text-red-500'> clear</div></div>
-          )))}
+            </div>
+          ))}
         </div>
       </div>
     </Sidebar>

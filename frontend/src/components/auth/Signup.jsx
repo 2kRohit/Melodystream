@@ -10,6 +10,7 @@ import FormContainer from "../form/FormContainer";
 import FormInput from "../form/FormInput";
 import Submit from "../form/Submit";
 import Title from "../form/Title";
+import Navbar from "../user/Navbar";
 
 const validateUserInfo = ({ name, email, password }) => {
   const isValidName = /^[a-z A-Z]+$/;
@@ -62,12 +63,16 @@ export default function Signup() {
 
   useEffect(() => {
     // we want to move our user to somewhere else
-    if (isLoggedIn) navigate("/");
+    if (isLoggedIn&&authInfo.profile.role==="admin") {navigate("/admin/dashboard");}
+    else if(isLoggedIn&&authInfo.profile.role==="verifier") {navigate("/verifier/dashboard");}
+    else if(isLoggedIn&&authInfo.profile.role==="user"){ navigate('/')}
   }, [isLoggedIn]);
 
   const { name, email, password } = userInfo;
 
   return (
+    <>
+    <Navbar />
     <div className="bg-gray-900 dark:bg-gray-900 min-h-screen flex items-center justify-center">
       <form onSubmit={handleSubmit} className="bg-gradient-to-r from-emerald-800 via-indigo-800 to-teal-800 dark:bg-gray-800 shadow-md rounded px-8 py-6 sm:w-1/2 md:w-1/3 lg:w-1/4">
         <h2 className="text-2xl font-bold mb-6 text-center text-white dark:text-white">Sign Up</h2>
@@ -93,6 +98,6 @@ export default function Signup() {
         </div>
       </form>
     </div>
-
+</>
   );
 }

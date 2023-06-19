@@ -27,13 +27,17 @@ export default function Sidebar({ children }) {
   };
   const isuser=()=>{
     const token = localStorage.getItem("auth-token");
-    if (!token) navigate('/');
+    if (!token || authInfo.profile?.role!=="verifier") navigate('/');
     
   }
   useEffect(()=>{
     isuser()
     
   },[logout])
+  useEffect(()=>{
+    isuser()
+    
+  },[])
   const handleSubmit = async (e) => {
     e.preventDefault();
     navigate(`/search?q=${search}`)
@@ -96,7 +100,11 @@ export default function Sidebar({ children }) {
               <span className='flex items-center text-base ml-4'> <RiVideoUploadLine/><span className='ml-4'>Upload Video</span></span>
               </Link>
             </li>
-           
+            <li>
+              <Link to="/addcategory" className="block bg-transparent py-1  px-4 rounded-md hover:bg-gray-600">
+              <span className='flex items-center text-base ml-4'> <MdLibraryAdd/><span className='ml-4'>Add Category</span></span>
+              </Link>
+            </li>
             <li>
               <Link to="/viewhistory" className="block bg-transparent py-1  px-4 rounded-md hover:bg-gray-600">
               <span className='flex items-center text-base ml-4'> <FaHistory/><span className='ml-4'>View History</span></span>

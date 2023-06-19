@@ -10,6 +10,7 @@ import FormInput from "../form/FormInput";
 import Submit from "../form/Submit";
 import Title from "../form/Title";
 import { ImSpinner3 } from "react-icons/im";
+import Navbar from "../user/Navbar";
 
 const validateUserInfo = ({ email, password }) => {
   if (!email.trim()) return { ok: false, error: "Email is missing!" };
@@ -48,10 +49,14 @@ export default function Signin() {
 
   useEffect(() => {
     // we want to move our user to somewhere else
-    if (isLoggedIn) navigate("/");
+    if (isLoggedIn&&authInfo.profile.role==="admin") {navigate("/admin/dashboard");}
+    else if(isLoggedIn&&authInfo.profile.role==="verifier") {navigate("/verifier/dashboard");}
+    else if(isLoggedIn&&authInfo.profile.role==="user"){ navigate('/')}
   }, [isLoggedIn]);
 const busy=isPending
   return (
+    <>
+    <Navbar />
     <div className="bg-gray-800 dark:bg-gray-800 min-h-screen flex items-center justify-center">
   <form onSubmit={handleSubmit} className="bg-gradient-to-r from-emerald-800 via-indigo-800 to-teal-800 dark:bg-gray-800 shadow-md rounded px-8 py-6 sm:w-1/2 md:w-1/3 lg:w-1/4">
    
@@ -76,6 +81,6 @@ const busy=isPending
           <Link to="/auth/signup" className="text-cyan-500 hover:text-cyan-400 ml-2">Register</Link>
         </div>
       </form>
-    </div>
+    </div></>
   );
 }

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 
 import { Link, useLocation } from 'react-router-dom';
 import axios from 'axios';
-import { FaThumbsUp, FaThumbsDown, FaShare, FaBookmark, FaUserCircle } from 'react-icons/fa';
+import { FaThumbsUp, FaThumbsDown, FaShare, FaBookmark, FaUserCircle, FaRegTrashAlt } from 'react-icons/fa';
 import { RiArrowUpSLine, RiArrowDownSLine, RiReplyLine, RiEyeLine, RiCalendarLine,RiSunLine } from 'react-icons/ri';
 import { MdReport} from 'react-icons/md'
 import Sidebar from './Sidebar';
@@ -293,6 +293,36 @@ const handleunreport= async () => {
     console.error(error);
   }}
 };
+
+
+//delete comment
+const deletecomment=async(commentid)=>{
+  const confirmdelete= window.confirm('Do you want to delete comment')
+  if(confirmdelete){
+  try {
+   
+    const response = await axios.delete(`http://localhost:8000/api/video/${videoId}/commentdelete/${commentid}`);
+    fetchComments()
+    
+  } catch (error) {
+    console.error(error);
+  }}
+
+}
+
+const deletereply=async(commentid,replyid)=>{
+  const confirmdelete= window.confirm('Do you want to delete comment')
+  if(confirmdelete){
+  try {
+   
+    const response = await axios.delete(`http://localhost:8000/api/video/${videoId}/replydelete/${commentid}/${replyid}`);
+    fetchComments()
+    
+  } catch (error) {
+    console.error(error);
+  }}
+  
+}
 useEffect(()=>{
   fetchVideo()
 fetchComments()
@@ -308,6 +338,54 @@ useEffect(()=>{
     fetchreportStatus()
   
 }, []); 
+const formatDateTime = (timestamp) => {
+  const date = new Date(timestamp);
+  const currentDate = new Date();
+  const timeDifference = currentDate.getTime() - date.getTime();
+
+  // Convert the time difference to seconds
+  const seconds = Math.floor(timeDifference / 1000);
+
+  // Define time units in seconds
+  const minute = 60;
+  const hour = minute * 60;
+  const day = hour * 24;
+  const month = day * 30;
+  const year = month * 12;
+
+  // Calculate the relative time based on the time difference
+  if (seconds < minute) {
+    return `${seconds} sec ago`;
+  } else if (seconds < hour) {
+    const minutes = Math.floor(seconds / minute);
+    return `${minutes} min ago`;
+  } else if (seconds < day) {
+    const hours = Math.floor(seconds / hour);
+    return `${hours} hr ago`;
+  } else if (seconds < month) {
+    const days = Math.floor(seconds / day);
+    return `${days} day ago`;
+  } else if (seconds < year) {
+    const months = Math.floor(seconds / month);
+    return `${months} month ago`;
+  } else {
+    const years = Math.floor(seconds / year);
+    return `${years} year ago`;
+  }
+};
+
+const formatDuration = (duration) => {
+  if (duration >= 3600) {
+    const hours = Math.floor(duration / 3600);
+    const minutes = Math.floor((duration % 3600) / 60);
+    return `${hours} hr ${minutes} min`;
+  } else if (duration >= 60) {
+    const minutes = Math.floor(duration / 60);
+    return `${minutes} min`;
+  } else {
+    return `${duration} sec`;
+  }
+};
 
   return (
     <Sidebar>
@@ -488,8 +566,11 @@ onClick={report ? handleunreport : handleReportClick}
     <FaUserCircle className="w-8 h-8 text-gray-500 mr-2" />
   )}
                         <div>
-                          <p className="text-white font-bold">{comment.user?.name}</p>
+                     <p className="text-white font-bold ">{comment.user?.name}</p>
+                     <div className='flex items-center'>   
                           <p className="text-gray-500">{comment.content}</p>
+                          <p className="text-gray-500 ml-2">&bull; {formatDateTime(comment.timestamp)}</p></div>
+                         
                         </div>
                       </div>
                       <div className="flex items-center mt-2">
@@ -518,6 +599,10 @@ onClick={report ? handleunreport : handleReportClick}
                             Hide Replies
                           </button>
                         )}
+                        
+                       <div onClick={()=>{ deletecomment(comment._id)}} className='text-gray-500 text-sm mr-1 mt-0.5
+                        hover:text-red-500 cursor-pointer'> 
+                       {comment.userId === userId || video.userId===userId? <FaRegTrashAlt /> : null}</div>
                       </div>
                       {showReplies[comment._id] && (
                         <div className="ml-10 mt-2">
@@ -530,8 +615,12 @@ onClick={report ? handleunreport : handleReportClick}
                                   alt="Profile"
                                 />
                                 <div>
-                                  <p className="text-white font-bold">{reply.user?.name}</p>
-                                  <p className="text-gray-500">{reply.content}</p>
+                                <div className="flex items-center mt-2">      <p className="text-white font-bold">{reply.user?.name}</p>
+                                  <div onClick={()=>{ deletereply(comment._id,reply._id)}} className='text-gray-500 text-sm mr-2 p-2 mt-0.5
+                        hover:text-red-500 cursor-pointer'> 
+                       {reply.userId === userId || video.userId===userId? <FaRegTrashAlt /> : null}</div></div>
+                              <div className='flex items-center'>    <p className="text-gray-500">{reply.content}</p>
+                                  <p className="text-gray-500 ml-2">&bull; {formatDateTime(reply.timestamp)}</p></div>
                                 </div>
                               </div>
                             </div>

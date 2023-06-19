@@ -161,9 +161,10 @@ const UploadVideo = () => {
 
   return (
     <SidebarForm>
-      <div className="max-w-lg mx-auto bg-gray-800 p-6 rounded-lg">
-        <h2 className="text-2xl font-bold mb-4 text-white text-center">Upload Video</h2>
-        <form onSubmit={handleSubmit} className="space-y-4">
+      <div className="max-w-lg mx-auto bg-gray-900 p-12 shadow-2xl rounded-lg border-4 border-gray-600 mt-0">
+        <h2 className="text-2xl font-semibold mb-4 -mt-5 text-blue-500 text-center italic">Upload Video</h2>
+ 
+        <form onSubmit={handleSubmit} className="space-y-2">
           <div>
             <label htmlFor="title" className="block mb-2 font-medium text-white">
               Title

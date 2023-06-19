@@ -7,6 +7,7 @@ import Container from "../Container";
 import FormContainer from "../form/FormContainer";
 import Submit from "../form/Submit";
 import Title from "../form/Title";
+import Navbar from "../user/Navbar";
 
 const OTP_LENGTH = 6;
 let currentOTPIndex;
@@ -109,6 +110,8 @@ export default function EmailVerification() {
   // if(!user) return null
 
   return (
+    <>
+    <Navbar />
     <FormContainer>
       <Container>
         <form onSubmit={handleSubmit} className={commonModalClasses}>
@@ -146,6 +149,6 @@ export default function EmailVerification() {
           </div>
         </form>
       </Container>
-    </FormContainer>
+    </FormContainer></>
   );
 }

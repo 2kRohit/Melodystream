@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { Link, useLocation } from 'react-router-dom';
 import Sidebar from './Sidebar';
-import SidebarForm from './SidebarForm';
+
 
 const ViewVerifiedVideos = () => {
   const location = useLocation();
@@ -62,26 +62,7 @@ const ViewVerifiedVideos = () => {
     }
   };
 
-  const handleVisibilityChange = async () => {
-    // Implement logic to change the visibility of the video (public or private)
-    try {
-      const newVisibility = video.visibility === 'public' ? 'private' : 'public';
-      const confirmed = window.confirm(
-        `Are you sure you want to ${newVisibility === 'public' ? 'make the video public?' : 'make the video private?'}`
-      );
-      if (!confirmed) {
-        return;
-      }
-
-      const response = await axios.patch(`http://localhost:8000/api/video/changevisibility/${videoId}`, {
-        visibility: newVisibility,
-      });
-      setVideo((prevVideo) => ({ ...prevVideo, visibility: newVisibility }));
-      console.log('Visibility changed successfully:', response.data);
-    } catch (error) {
-      console.error('Error changing visibility:', error);
-    }
-  };
+ 
 
   if (!video) {
     return (
@@ -95,7 +76,7 @@ const ViewVerifiedVideos = () => {
   }
 
   return (
-    <SidebarForm>
+    <Sidebar>
       <h1 className='text-center text-3xl text-blue-500 italic p-2 mb-1 mt-1 font-semibold'>Video Details</h1>
       <div className="flex justify-center items-center h-full">
         <div className="max-w-6xl w-full bg-gray-800 rounded-lg overflow-hidden">
@@ -158,27 +139,39 @@ const ViewVerifiedVideos = () => {
                     ))}
                 </div>
               </div>
+              <div className="flex items-center mt-2">
+                <span className="text-gray-500 text-sm">Views:</span>
+                <span className="text-gray-300 text-sm ml-2">{video.views}</span>
+              </div>
+              <div className="flex items-center mt-2">
+                <Link to={`/viewvideo?videoId=${video._id}`}>
+                <span className="text-gray-500 text-sm">Comments:</span>
+                <span className="text-gray-300 text-sm ml-2">{video.comments.length}</span></Link>
+              </div>
+              <div className="flex items-center mt-2">
+                <span className="text-gray-500 text-sm">Likes:</span>
+                <span className="text-gray-300 text-sm ml-2">{video.likes.length}</span>
+              </div>
+              <div className="flex items-center mt-2">
+                <span className="text-gray-500 text-sm">Dislikes:</span>
+                <span className="text-gray-300 text-sm ml-2">{video.dislikes.length}</span>
+              </div>
+              <div className="flex items-center mt-2">
+                <span className="text-gray-500 text-sm">Reports:</span>
+                <span className="text-gray-300 text-sm ml-2">{report ? report.length : 'Loading...'}</span>
+              </div>
               
-             
-              {video.status === 'rejected' && (
-                <div className="mt-4">
-                  <h2 className="text-red-500 text-xl font-semibold mb-2">Rejection Reason:</h2>
-                  <p className="text-gray-300 ">{video.addreason}</p>
-                </div>
-              )}
-              {video.status !== 'rejected' && (
-                <div className=" flex mt-2">
-                  <h2 className=" text-gray-500 text-sm">Status:</h2>
-                  <p className="text-gray-300 text-sm ml-2 ">Not verified yet!</p>
-                </div>
-              )}
+              <div className="flex items-center mt-2">
+                <span className="text-gray-500 text-sm">visibility:</span>
+                <span className="text-gray-300 text-sm ml-2">{video.visibility}</span>
+              </div>  
             </div>
            
           </div>
-         
+          {/* Add necessary components based on your logic */}
         </div>
       </div>
-    </SidebarForm>
+    </Sidebar>
   );
 };
 
