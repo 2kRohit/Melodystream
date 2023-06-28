@@ -456,7 +456,7 @@ onClick={report ? handleunreport : handleReportClick}
 
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center z-50">
-          <div className="bg-gray-800 rounded-lg p-6 w-96">
+          <div className="bg-gray-900 rounded-lg p-6 w-96 border-4 border-gray-600">
             <h2 className="text-lg font-bold mb-4">Report</h2>
             <form onSubmit={handleSubmit}>
               <div className="mb-6">
@@ -464,16 +464,17 @@ onClick={report ? handleunreport : handleReportClick}
                 <textarea
                   value={reasonValue}
                   onChange={(e) => setReasonValue(e.target.value)}
-                  className="border border-gray-300 rounded p-2 w-full bg-white text-black h-32"
+                  className="border border-gray-300 rounded p-2 w-full bg-gray-800 text-white h-32"
                   required
                 />
               </div>
               <div className="mb-4">
-                <label className="block mb-1">Upload Document (if any):</label>
+                <label className="block mb-0">Upload Document (if any):</label>
+                <label className='text-sm text-gray-300 italic'>only pdf file accepted</label>
                 <input
                   type="file"
                   onChange={(e) => setFileValue(e.target.files[0])}
-                  accept=".doc,.docx,.pdf"
+                  accept=".pdf"
                   className="border border-gray-300 rounded p-2 w-full"
                 />
               </div>

@@ -10,6 +10,7 @@ const userRouter = require("./routes/user");
 const videoRouter = require("./routes/video");
 const adminRouter=require('./routes/admin');
 const verifierRouter=require('./routes/verifier')
+const musicRouter=require('./routes/music')
 const { handleNotFound } = require("./utils/helper");
 
 const app = express();
@@ -18,7 +19,8 @@ app.use(express.json());
 app.use(morgan("dev"));
 app.use('/uploads/videos', express.static(path.join(__dirname, '../backend/uploads/videos')));
 app.use('/uploads/profile', express.static(path.join(__dirname, '../backend/uploads/profile')));
-app.use('/uploads/profile', express.static(path.join(__dirname, '../backend/uploads/report')));
+app.use('/uploads/report', express.static(path.join(__dirname, '../backend/uploads/report')));
+app.use('/uploads/music', express.static(path.join(__dirname, '../backend/uploads/music')));
 
 
 
@@ -27,6 +29,7 @@ app.use("/api/user", userRouter);
 app.use("/api/video", videoRouter);
 app.use("/api/admin", adminRouter);
 app.use("/api/verifier", verifierRouter);
+app.use("/api/music", musicRouter);
 app.use("/*", handleNotFound);
 
 app.use(errorHandler);

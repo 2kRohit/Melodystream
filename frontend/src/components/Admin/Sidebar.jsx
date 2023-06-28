@@ -4,12 +4,13 @@ import { FiMenu, FiUser, FiLogOut } from 'react-icons/fi';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks';
 import { FaUserCircle } from 'react-icons/fa';
-import {MdDashboard, MdLibraryAdd, MdLogout, MdOutlineSettings, MdOutlineSettingsSuggest, MdVideoLibrary} from "react-icons/md"
-import {RiDashboardFill, RiUserFill, RiUserFollowFill, RiUserSettingsFill, RiVideoUploadLine} from "react-icons/ri"
+import {MdDashboard, MdLibraryAdd, MdLibraryMusic, MdLogout, MdOutlineSettings, MdOutlineSettingsSuggest, MdOutlineVideoLibrary, MdVideoLibrary} from "react-icons/md"
+import {RiDashboardFill, RiFolderMusicFill, RiUserFill, RiUserFollowFill, RiUserSettingsFill, RiVideoUploadLine} from "react-icons/ri"
 import {GiHamburgerMenu} from "react-icons/gi"
 import {IoMdArrowDropdown, IoMdSettings} from "react-icons/io"
 import {FiSave} from "react-icons/fi"
 import { CgProfile } from 'react-icons/cg';
+import { TbFileMusic } from 'react-icons/tb';
 export default function Sidebar({ children }) {
   const navigate = useNavigate();
   
@@ -39,16 +40,21 @@ export default function Sidebar({ children }) {
     navigate(`/search?q=${search}`)
     
   };
-  const [showSidebar, setShowSidebar] = useState(false);
+  const [showSidebar, setShowSidebar] = useState(true);
   
   const [showDropdown, setShowDropdown] = useState(false);
   const [showDropdownn, setShowDropdownn] = useState(false);
+  const [showmusicDropdown, setShowmusicDropdown] = useState(false);
+
   const toggleSidebar = () => {
     setShowSidebar(!showSidebar);
   };
 
   const toggleDropdown = () => {
     setShowDropdown(!showDropdown);
+  };
+  const togglemusicDropdown= () => {
+    setShowmusicDropdown(!showmusicDropdown);
   };
   const toggleDropdownn = () => {
     setShowDropdownn(!showDropdownn);
@@ -101,13 +107,57 @@ export default function Sidebar({ children }) {
                 <span className='flex items-center text-base ml-4'> <RiUserFollowFill/><span className='ml-4'>Verifier</span></span>
               </Link>
             </li>
-           
+            <li>
+              <a
+                className="block bg-transparent py-1  px-4 rounded-md hover:bg-gray-600 flex items-center"
+                onClick={togglemusicDropdown}
+              >
+             <span className='flex items-center text-base ml-4'> <MdLibraryMusic/><span className='ml-4'>Music</span></span>
+                <IoMdArrowDropdown className={`ml-1 mt-1 transform ${showmusicDropdown ? 'rotate-180' : ''}`} />
+              </a>
+              <ul className={`mt-0 ml-12 bg-gray-800  space-y-1 ${showmusicDropdown ? '' : 'hidden'}`}>
+                <li>
+                  <Link
+                    to="/addmusiccategory"
+                    className="block bg-transparent py-1 border-b-0 px-4 hover:bg-gray-600"
+                  >
+                   Category
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/addartist"
+                    className="block bg-transparent py-1 border-b-0 px-4 hover:bg-gray-600"
+                  >
+                   Artist
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/addlanguage"
+                    className="block bg-transparent py-1 border-b-0 px-4 hover:bg-gray-600"
+                  >
+                   Language
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/admin/addmusic" className="block bg-transparent py-1  px-4 border-b-0 hover:bg-gray-600">
+                    Add Music
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/admin/viewmusic" className="block bg-transparent py-1  px-4 border-b-0 hover:bg-gray-600">
+                    View Music
+                  </Link>
+                </li>
+              </ul>
+            </li>
             <li>
               <a
                 className="block bg-transparent py-1  px-4 rounded-md hover:bg-gray-600 flex items-center"
                 onClick={toggleDropdown}
               >
-             <span className='flex items-center text-base ml-4'> <FaFileVideo/><span className='ml-4'>Videos</span></span>
+             <span className='flex items-center text-base ml-4'> <MdOutlineVideoLibrary/><span className='ml-4'>Videos</span></span>
                 <IoMdArrowDropdown className={`ml-1 mt-1 transform ${showDropdown ? 'rotate-180' : ''}`} />
               </a>
               <ul className={`mt-0 ml-12 bg-gray-800  space-y-1 ${showDropdown ? '' : 'hidden'}`}>

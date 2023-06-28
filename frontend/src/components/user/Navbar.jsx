@@ -16,13 +16,13 @@ export default function Navbar() {
   };
   return (
     <div>
-  <nav className="bg-gradient-to-r from-emerald-800 via-indigo-800 to-teal-800 dark:bg-gray-900 dark:text-white
+  <nav className="bg-gray-900 text-white
   ">
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div className="flex items-center justify-between h-16">
         <div className="flex-shrink-0">
         <Link to="/" className="flex items-center text-white font-bold text-3xl font-attractive">
-            <span className="text-indigo-500 font-extrabold">MELODY</span><span className="text-gray-800 font-bold">STREAM</span>
+            <span className="text-indigo-500 font-extrabold italic">MELODY</span><span className="italic text-white font-bold">STREAM</span>
           </Link>
         </div>
         <div className="hidden md:block">
@@ -31,7 +31,7 @@ export default function Navbar() {
            
 {isLoggedIn ? (<>
    <Link to='/auth/video' className="text-white hover:text-gray-300 px-3 py-2 rounded-md text-sm font-medium">Video</Link>
-   <Link to='/auth/music' className="text-white hover:text-gray-300 px-3 py-2 rounded-md text-sm font-medium">Music</Link>           
+   <Link to='/music' className="text-white hover:text-gray-300 px-3 py-2 rounded-md text-sm font-medium">Music</Link>           
    <button
                   onClick={handleLogout}
                   className="text-white hover:text-gray-300 px-3 py-2 rounded-md text-sm font-medium"

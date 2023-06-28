@@ -9,7 +9,6 @@ import ForgetPassword from "./components/auth/ForgetPassword";
 import ConfirmPassword from "./components/auth/ConfirmPassword";
 import NotFound from "./components/NotFound";
 import Dashboard from "./components/video/Dashboard";
-import Music from "./music/Music";
 import Uploadvideo from "./components/video/Uploadvideo";
 import Unverifiedvideos from "./components/video/Unverifiedvideos";
 import ViewUnverifiedVideos from "./components/video/viewUnverifiedvideos";
@@ -29,6 +28,26 @@ import Adminuser from "./components/Admin/User";
 import Adminverifier from "./components/Admin/Verifier";
 import Adminvideos from "./components/Admin/Videos";
 import Adminviewvideos from "./components/Admin/Viewvideo";
+import Verifierunverifiedvideos from "./components/Verifier/unverifiedvideos";
+import Verifierverifiedvideos from "./components/Verifier/verifiedvideos";
+import Verifierrejectedvideos from "./components/Verifier/rejectedvideos";
+import Verifierviewvideos from "./components/Verifier/viewvideos";
+import Verifieruser from "./components/Verifier/User";
+import Verifieruserprofile from "./components/Verifier/userprofile";
+import Verifierverifiedreports from "./components/Verifier/verifiedreports";
+import Verifierunverifiedreports from "./components/Verifier/unverifiedreports";
+import Music from "./components/Music/music";
+import  Addmusic from "./components/Admin/Addmusic"
+import  Addmusiccategory from "./components/Admin/musiccategory"
+import  Addartist from "./components/Admin/artist"
+import  Addlanguage from "./components/Admin/language"
+import  Viewmusic from "./components/Music/viewmusic"
+import  Favourite from "./components/Music/favourite"
+import  Musichistory from "./components/Music/history"
+import  Adminviewmusic from "./components/Admin/viewmusic"
+import  Playlist from "./components/Music/playlist"
+import  Viewplaylist from "./components/Music/viewplaylist"
+import  Musicsearch from "./components/Music/musicsearch"
 export default function App() {
   return (
     <>
@@ -41,7 +60,7 @@ export default function App() {
         <Route path="/auth/forget-password" element={<ForgetPassword />} />
         <Route path="/auth/reset-password" element={<ConfirmPassword />} />
         <Route path="/auth/video" element={<Dashboard/>} />
-        <Route path="/auth/music" element={<Music/>} />
+      
         <Route path="/auth/upload-video" element={<Uploadvideo/>} />
         <Route path="/auth/unverified-videos" element={<Unverifiedvideos/>} />
         <Route path="/viewunverifiedvideo" element={<ViewUnverifiedVideos/>} />
@@ -61,6 +80,27 @@ export default function App() {
         <Route path="admin/Verifier" element={<Adminverifier/>} />
         <Route path="admin/videos" element={<Adminvideos/>} />
         <Route path="admin/viewvideos" element={<Adminviewvideos/>} />
+        <Route path="verifier/viewverifiedvideos" element={<Verifierviewvideos/>} />
+        <Route path="verifier/verifiedvideos" element={<Verifierverifiedvideos/>} />
+        <Route path="verifier/unverifiedvideos" element={<Verifierunverifiedvideos/>} />
+        <Route path="verifier/rejectedvideos" element={<Verifierrejectedvideos/>} />
+        <Route path="verifier/user" element={<Verifieruser/>} />
+        <Route path="verifier/verifiedreports" element={<Verifierverifiedreports/>} />
+        <Route path="verifier/unverifiedreports" element={<Verifierunverifiedreports/>} />
+        <Route path="verifier/userprofile" element={<Verifieruserprofile/>} />
+        <Route path="admin/addmusic" element={<Addmusic/>} />
+        <Route path="/addartist" element={<Addartist/>} />
+        <Route path="/addlanguage" element={<Addlanguage/>} />
+        <Route path="/addmusiccategory" element={<Addmusiccategory/>} />
+        <Route path="/music" element={<Music/>} />
+        <Route path="/viewmusic" element={<Viewmusic/>} />
+        <Route path="admin/viewmusic" element={<Adminviewmusic/>} />
+        <Route path="/favourite" element={<Favourite/>} />
+        <Route path="/musichistory" element={<Musichistory/>} />
+        <Route path="/playlist" element={<Playlist/>} />
+        <Route path="/viewplaylist" element={<Viewplaylist/>} />
+        <Route path="/musicsearch" element={<Musicsearch/>} />
+        
         <Route path="*" element={<NotFound />} />
 
       </Routes>

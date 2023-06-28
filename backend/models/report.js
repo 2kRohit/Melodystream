@@ -20,6 +20,15 @@ const reportSchema = new mongoose.Schema({
     ref: 'Video',
     required: true,
   },
+  status: {
+    type: String,
+    enum: ['verified', 'unverified'],
+    default:'unverified'
+  },
+  message: {
+    type: String,
+    required: false,
+  },
   timestamp: {
     type: Date,
     default: Date.now,

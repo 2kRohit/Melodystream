@@ -57,19 +57,19 @@ const busy=isPending
   return (
     <>
     <Navbar />
-    <div className="bg-gray-800 dark:bg-gray-800 min-h-screen flex items-center justify-center">
-  <form onSubmit={handleSubmit} className="bg-gradient-to-r from-emerald-800 via-indigo-800 to-teal-800 dark:bg-gray-800 shadow-md rounded px-8 py-6 sm:w-1/2 md:w-1/3 lg:w-1/4">
+    <div className="bg-gray-900 min-h-screen flex items-center justify-center">
+  <form onSubmit={handleSubmit} className="bg-gray-900 border-4 border-gray-600 shadow-md rounded px-8 py-6 sm:w-1/2 md:w-1/3 lg:w-1/4">
    
 
         <h2 className="text-2xl font-bold mb-6 text-center text-white dark:text-white">Login</h2>
         <div className="mb-4">
-          <label htmlFor="email" className="block text-gray-200 dark:text-gray-200 text-sm font-bold mb-2">Email</label>
+          <label htmlFor="email" className="block text-white dark:text-white text-sm font-bold mb-2">Email</label>
           <input  value={userInfo.email} onChange={handleChange} placeholder="john@email.com" name="email" type="email" id="email" 
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+            className="shadow appearance-none bg-gray-800 border rounded w-full py-2 px-3 text-white dark:text-white leading-tight focus:outline-none focus:shadow-outline" />
         </div>
         <div className="mb-6">
-          <label htmlFor="password" className="block text-gray-200 dark:text-gray-200 text-sm font-bold mb-2">Password</label>
-          <input type="password" placeholder="********" name="password" value={userInfo.password} onChange={handleChange}  id="password" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+          <label htmlFor="password" className="block text-white dark:text-white text-sm font-bold mb-2">Password</label>
+          <input type="password" placeholder="********" name="password" value={userInfo.password} onChange={handleChange}  id="password" className="shadow appearance-none bg-gray-800 border rounded w-full py-2 px-3 text-white dark:text-white leading-tight focus:outline-none focus:shadow-outline" />
         </div>
         <div className="flex items-center justify-between">
           { !busy?(
@@ -77,7 +77,7 @@ const busy=isPending
            ):<button className="bg-cyan-500 hover:bg-cyan-400 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"><ImSpinner3 className="animate-spin" /></button> } <Link to="/auth/forget-password" className="text-cyan-500 hover:text-cyan-400 text-sm">Forgot Password?</Link>
         </div>
         <div className="text-center mt-4">
-          <span className="text-gray-200 dark:text-gray-200">Don't have an account?</span>
+          <span className="text-white dark:text-white">Don't have an account?</span>
           <Link to="/auth/signup" className="text-cyan-500 hover:text-cyan-400 ml-2">Register</Link>
         </div>
       </form>

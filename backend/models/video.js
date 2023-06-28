@@ -86,7 +86,7 @@ const videoSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
-  addreason: {
+  reason: {
     type: String,
     required: false,
   },

@@ -58,7 +58,7 @@ const User = () => {
                 type="text"
                 value={searchQuery}
                 onChange={handleSearch}
-                placeholder="Search by title or category"
+                placeholder="Search by name or email"
                 className=" px-1 w-64 py-2 rounded-lg bg-gray-900  text-white focus:outline-none"
               />
             

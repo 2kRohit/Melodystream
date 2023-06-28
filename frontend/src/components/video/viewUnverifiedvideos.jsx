@@ -97,8 +97,8 @@ const ViewVerifiedVideos = () => {
   return (
     <SidebarForm>
       <h1 className='text-center text-3xl text-blue-500 italic p-2 mb-1 mt-1 font-semibold'>Video Details</h1>
-      <div className="flex justify-center items-center h-full">
-        <div className="max-w-6xl w-full bg-gray-800 rounded-lg overflow-hidden">
+      <div className="flex justify-center items-center text-justify">
+        <div className="max-w-6xl w-full bg-gray-900 rounded-lg overflow-hidden">
           <div className="flex">
             <div className="w-2/3">
               <div className="relative" style={{ paddingTop: '56.25%' }}>
@@ -114,6 +114,8 @@ const ViewVerifiedVideos = () => {
                 </video>
                 
               </div>
+              <h1 className="text-4xl  text-white mb-4">{video.title}</h1>
+              <p className="text-gray-300 ">{video.description}</p>
             </div> 
             <div className="w-1/3 bg-gray-900 px-6 py-4">
               {video.thumbnailPath && (
@@ -127,8 +129,7 @@ const ViewVerifiedVideos = () => {
                 </div>
               )}
              
-              <h1 className="text-4xl font-bold text-white mb-4">{video.title}</h1>
-              <p className="text-gray-300 text-lg">{video.description}</p>
+              
               <div className="flex items-center mt-4">
                 <span className="text-gray-500 text-sm">Category:</span>
                 <span className="text-gray-300 text-sm ml-2">{video.category}</span>

@@ -96,11 +96,11 @@ export default function ConfirmPassword() {
       <>
       <Navbar />
       <FormContainer>
-        <Container>
-          <h1 className="text-4xl font-semibold dark:text-white text-primary">
+        
+          <h1 className="text-4xl -my-32 font-semibold dark:text-white text-primary">
             Sorry the token is invalid!
           </h1>
-        </Container>
+     
       </FormContainer></>
     );
 

@@ -119,6 +119,8 @@ router.get('/unverified/:userId', async (req, res) => {
   
       // Delete the video from the database
       await Video.deleteOne({ _id: videoId });
+      const saved=await Saved.deleteMany({videoId:videoId})
+      const history=await History.deleteMany({videoId:videoId})
   
       res.status(200).json({ message: 'Video deleted successfully' });
     } catch (error) {

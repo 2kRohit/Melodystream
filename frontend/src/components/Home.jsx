@@ -19,7 +19,7 @@ const Home = () => {
     <>
     <Navbar />
     <div className="bg-gray-900 dark:bg-gray-900 min-h-screen flex items-center justify-center">
-      <Container>
+      
         {isLoggedIn && !isVerified ? (
           <p className="text-lg text-center bg-blue-50 p-2">
             It looks like you haven't verified your account,{' '}
@@ -42,7 +42,7 @@ const Home = () => {
               {isLoggedIn && isVerified ? (
                 <>
                   <Link
-                    to="/auth/music"
+                    to="/music"
                     className="bg-gradient-to-r from-purple-500 to-indigo-500 hover:bg-gradient-to-r hover:from-purple-600 hover:to-indigo-600 text-white font-bold py-6 px-12 rounded-lg shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                   >
                     Explore Music
@@ -73,7 +73,7 @@ const Home = () => {
             </div>
           </div>
         )}
-      </Container>
+      
     </div></>
   );
 };
