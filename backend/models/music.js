@@ -11,6 +11,10 @@ const musicSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  mood: {
+    type: String,
+    required: true,
+  },
  
   category: {
     type: String,

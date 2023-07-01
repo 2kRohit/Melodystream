@@ -158,6 +158,7 @@ router.patch('/changevisibility/:videoId', async (req, res) => {
     // Find the video by its ID
     const video = await Video.findById(videoId);
 
+
     if (!video) {
       return res.status(404).json({ message: 'Video not found' });
     }
@@ -203,7 +204,7 @@ router.post('/categories', async (req, res) => {
 // Get all videos
 router.get('/videos', async (req, res) => {
   try {
-    const videos = await Video.find();
+    const videos = await Video.find({status:"verified",visibility:"public"}).sort({ timestamp: -1 });
     res.status(200).json(videos);
   } catch (error) {
     console.error('Error fetching videos:', error);
@@ -267,7 +268,7 @@ router.get('/related/:videoId', async (req, res) => {
     }
 
     // Fetch related videos based on the category of the current video, excluding the current video
-    const relatedVideos = await Video.find({ category: video.category, _id: { $ne: videoId } });
+    const relatedVideos = await Video.find({ category: video.category, _id: { $ne: videoId } ,status:"verified",visibility:"public"}).sort({ timestamp: -1 });
 
     res.json(relatedVideos);
   } catch (error) {
@@ -362,7 +363,7 @@ router.get('/category/:category', async (req, res) => {
   try {
     const category = req.params.category;
     const videos = await Video.find({  
-      category: category ,
+      category: category ,status:"verified",visibility:"public"
       
      }).sort({ timestamp: -1 });
     res.status(200).json({ videos });
@@ -387,8 +388,8 @@ router.get('/search/:q', async (req, res) => {
         { description: { $regex: regex } },
         { tags: { $regex: regex } },
         { category: { $regex: regex } },
-      ],
-    });
+      ],status:"verified",visibility:"public"}).sort({ timestamp: -1 });
+ 
 
     res.status(200).json({ videos });
   } catch (error) {
@@ -409,8 +410,7 @@ router.get('/tags/:q', async (req, res) => {
        
         { tags: { $regex: regex } },
        
-      ],
-    });
+      ],status:"verified",visibility:"public"}).sort({ timestamp: -1 });
 
     res.status(200).json({ videos });
   } catch (error) {
@@ -694,7 +694,7 @@ router.get('/viewsaved/:userId', async (req, res) => {
   try {
     const { userId } = req.params;
 
-    const history = await Saved.find({ userId })
+    const history = await Saved.find({ userId})
       .populate({
         path: 'videoId',
         model: 'Video',

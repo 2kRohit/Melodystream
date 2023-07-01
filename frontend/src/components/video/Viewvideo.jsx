@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { FaThumbsUp, FaThumbsDown, FaShare, FaBookmark, FaUserCircle, FaRegTrashAlt } from 'react-icons/fa';
+import { FaThumbsUp, FaThumbsDown, FaShare, FaBookmark, FaUserCircle, FaRegTrashAlt, FaChevronLeft, FaChevronRight, FaPlay, FaVolumeMute, FaVolumeUp, FaPause } from 'react-icons/fa';
 import { RiArrowUpSLine, RiArrowDownSLine, RiReplyLine, RiEyeLine, RiCalendarLine,RiSunLine } from 'react-icons/ri';
 import { MdReport} from 'react-icons/md'
 import Sidebar from './Sidebar';
@@ -10,12 +10,13 @@ import { useAuth } from '../../hooks';
 import {TbSun, TbSunOff} from 'react-icons/tb'
 
 const VideoPage = () => {
+  const navigate=useNavigate()
   const { authInfo } = useAuth();
   const { profile } = authInfo;
   const userId = profile?.id;
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
-  const videoId = searchParams.get('videoId');
+  const vId = searchParams.get('videoId');
   const [video, setVideo] = useState(null);
   const videoRef = useRef(null);
   const [relatedVideos, setRelatedVideos] = useState([]);
@@ -31,6 +32,58 @@ const [savestatus,setSavestatus]=useState(false)
   const [reasonValue, setReasonValue] = useState('');
   const [fileValue, setFileValue] = useState(null);
   const [report,setReport]=useState(false)
+const[videoId,setvideoId]=useState('')
+const[allid,setallid]=useState([])
+const [isPlaying,setIsPlaying]=useState(true)
+useEffect(()=>{
+  Allid()
+  },[])
+//setvdo
+const Allid=async()=>{
+  try{
+    const response = await axios.get(`http://localhost:8000/api/video/${vId}`);
+    setvideoId(response.data._id)
+    const relatedresponse = await axios.get(`http://localhost:8000/api/video/related/${response.data._id}`);
+   
+   if(relatedresponse.data.length===0){
+    await setallid([response.data])
+   
+    
+   }
+   else{
+   await setallid([response.data,...relatedresponse.data])
+    
+   }
+    
+
+    
+  }
+  catch (error) {
+    console.error(error);
+  }
+}
+
+useEffect(()=>{
+Allid()
+},[vId])
+
+
+const nextTrackHandler = () => {
+  const currentIndex = allid.findIndex((track) => track._id === videoId);
+  const nextIndex = (currentIndex + 1) % allid.length;
+  setvideoId(allid[nextIndex]._id);
+  setIsPlaying(true);
+ // Start playing the next track
+};
+const previousTrackHandler = () => {
+  const currentIndex = allid.findIndex((track) => track._id === videoId);
+  const previousIndex = (currentIndex - 1 + allid.length) % allid.length;
+  setvideoId(allid[previousIndex]._id);
+  setIsPlaying(true);
+ // Start playing the previous track
+};
+
+
 
   const handleReportClick = () => {
     setModalOpen(true);
@@ -144,13 +197,7 @@ const [savestatus,setSavestatus]=useState(false)
     }
   };
 
-  const handleVideoPlay = () => {
-    videoRef.current.play().catch((error) => console.error(error));
-  };
-
-  const handleVideoPause = () => {
-    videoRef.current.pause();
-  };
+  
 
   const handleCommentSubmit = async (e) => {
     e.preventDefault();
@@ -324,20 +371,16 @@ const deletereply=async(commentid,replyid)=>{
   
 }
 useEffect(()=>{
+ 
   fetchVideo()
 fetchComments()
 fetchRelatedVideos()
 fetchVideoStatus()
-
+fetchsavestatus()
+fetchreportStatus()
 },[videoId])
 
-useEffect(()=>{
-    
-    fetchVideoStatus()
-    fetchsavestatus()
-    fetchreportStatus()
-  
-}, []); 
+
 const formatDateTime = (timestamp) => {
   const date = new Date(timestamp);
   const currentDate = new Date();
@@ -393,31 +436,53 @@ const formatDuration = (duration) => {
         <div className="w-3/4 pr-4">
           {video ? (
             <div>
-              <div className="relative">
-                <video
-                  ref={videoRef}
-                  src={`http://localhost:8000/${video.videoPath}`}
-                  className="w-full"
-                  style={{ height: '480px' }} // Adjust the height as needed
-                  poster={`http://localhost:8000/${video.thumbnailPath}`}
-                  onClick={handleVideoPlay}
-                  onPause={handleVideoPause}
-                  controls
-                />
-              </div>
-              <h1 className="text-2xl font-bold mt-4">{video.title}</h1>
+     <div className="relative group">
+  <video
+    ref={videoRef}
+    src={`http://localhost:8000/${video.videoPath}`}
+    className="w-full cursor-pointer"
+    style={{ height: '480px' }} // Adjust the height as needed
+    poster={`http://localhost:8000/${video.thumbnailPath}`}
+    onEnded={nextTrackHandler}
+    autoPlay={isPlaying}
+    controls
+  />
+
+  {/* Next button */}
+  <button
+    onClick={nextTrackHandler}
+    className="next-button absolute top-1/2 right-0 transform -translate-y-1/2 bg-gray-800 p-3 rounded-full text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+  >
+    <FaChevronRight className="w-5 h-5" />
+  </button>
+
+  {/* Previous button */}
+  <button
+    onClick={previousTrackHandler}
+    className="previous-button absolute top-1/2 left-0 transform -translate-y-1/2 bg-gray-800 p-3 rounded-full text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+  >
+    <FaChevronLeft className="w-5 h-5" />
+  </button>
+</div>
+
+     <h1 className="text-2xl font-bold mt-4">{video.title}</h1>
               <div className="flex items-center mb-0 mt-2">
+              
               {video.user && video.user.profilePicture ? (<>
-    <img
-      className="w-8 h-8 rounded-full mr-2"
+              
+    <img onClick={()=>{navigate(`/user/userprofile?uId=${video.user._id}`)}} 
+      className="w-8 h-8 rounded-full mr-2 cursor-pointer"
       src={`http://localhost:8000/uploads/profile/${video.user?.profilePicture}`}
       alt="Profile"
     />
     <p>{video.user?.name}</p>
     </>
+    
   ) : (
     <>
-    <FaUserCircle className="w-8 h-8 text-gray-500 mr-2" />
+    <FaUserCircle 
+    onClick={()=>{navigate(`/user/userprofile?uId=${video.user._id}`)}} 
+    className="w-8 h-8 text-gray-500 mr-2 cursor-pointer" />
     <p>{video.user?.name}</p>
     </>
   )}
@@ -559,12 +624,13 @@ onClick={report ? handleunreport : handleReportClick}
                       <div className="flex items-center">
                       {comment.user && comment.user.profilePicture ? (
     <img
-      className="w-8 h-8 rounded-full mr-2"
+    onClick={()=>{navigate(`/user/userprofile?uId=${comment.user._id}`)}}
+      className="w-8 h-8 rounded-full mr-2 cursor-pointer"
       src={`http://localhost:8000/uploads/profile/${comment.user.profilePicture}`}
       alt="Profile"
     />
   ) : (
-    <FaUserCircle className="w-8 h-8 text-gray-500 mr-2" />
+    <FaUserCircle className="w-8 h-8 text-gray-500 mr-2 cursor-pointer" onClick={()=>{navigate(`/user/userprofile?uId=${comment.user._id}`)}}/>
   )}
                         <div>
                      <p className="text-white font-bold ">{comment.user?.name}</p>
@@ -610,11 +676,13 @@ onClick={report ? handleunreport : handleReportClick}
                           {comment.replies.map((reply) => (
                             <div key={reply._id} className="mb-2">
                               <div className="flex items-center">
-                                <img
-                                  className="w-8 h-8 rounded-full mr-2"
+                              {reply && reply.user.profilePicture? (
+                                <img onClick={()=>{navigate(`/user/userprofile?uId=${reply.user._id}`)}}
+                                  className="w-8 h-8 rounded-full mr-2 cursor-pointer"
                                   src={`http://localhost:8000/uploads/profile/${reply.user?.profilePicture}`}//{reply.user.profilePicture} // Assuming the profile picture is available in the user object
                                   alt="Profile"
-                                />
+                                />):(<FaUserCircle className="w-8 h-8 text-gray-500 mr-2 cursor-pointer"
+                                onClick={()=>{navigate(`/user/userprofile?uId=${reply.user._id}`)}} />)}
                                 <div>
                                 <div className="flex items-center mt-2">      <p className="text-white font-bold">{reply.user?.name}</p>
                                   <div onClick={()=>{ deletereply(comment._id,reply._id)}} className='text-gray-500 text-sm mr-2 p-2 mt-0.5
@@ -667,26 +735,25 @@ onClick={report ? handleunreport : handleReportClick}
         </div>
         <div className="w-px border border-gray-800"></div>
         <div className="w-1/4 pl-4">
-          <h2 className="text-lg font-bold mb-4">Related Videos</h2>
-          <div className="grid gap-4">
-            {relatedVideos.map((relatedVideo) => (
-              <Link key={relatedVideo._id}
-               to={`/Viewvideo?videoId=${relatedVideo._id}`}>
-                <div className="relative overflow-hidden rounded ">
-                  <video
-                    src={`http://localhost:8000/${relatedVideo.videoPath}`}
-                    className="w-full"
-                    style={{ height: '120px' }} // Adjust the height as needed
-                   
-                  />
-                  <p className="absolute bottom-2 text-center bg-transparent bg-opacity-75 text-white p-1  rounded">
-                    {relatedVideo.title}
-                  </p>
-                </div>
-              </Link>
-            ))}
-          </div>
+  <h2 className="text-xl font-semibold italic text-blue-500 text-center mb-4">Related Videos</h2>
+  <div className="grid gap-4">
+    {relatedVideos.map((relatedVideo) => (
+      <Link key={relatedVideo._id} to={`/Viewvideo?videoId=${relatedVideo._id}`}>
+        <div className="relative overflow-hidden rounded">
+          <video
+            src={`http://localhost:8000/${relatedVideo.videoPath}`}
+           
+            className="w-full h-40 object-cover"
+          />
+          <p className="absolute bottom-2 text-center bg-black bg-opacity-75 text-white p-1 rounded">
+            {relatedVideo.title}
+          </p>
         </div>
+      </Link>
+    ))}
+  </div>
+</div>
+
       </div>
     </Sidebar>
   );

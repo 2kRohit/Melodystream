@@ -10,7 +10,7 @@ import { FaUserCircle } from 'react-icons/fa';
 const User = () => {
   const [users, setUsers] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
-  
+  const navigate=useNavigate()
   const fetchuser = async () => {
     try {
       const response = await axios.get(`http://localhost:8000/api/admin/user`);
@@ -19,7 +19,21 @@ const User = () => {
       console.error(error);
     }
   };
-
+  const handleDelete = async (userId) => {
+    const confirmDelete = window.confirm('Are you sure you want to remove this user?');
+    if (confirmDelete) {
+      try {
+        await axios.delete(`http://localhost:8000/api/admin/user/${userId}`);
+        
+        alert('User removed successfully');
+        // music deleted successfully, update the music list
+      fetchuser();
+       
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  };
   useEffect(() => {
     fetchuser();
   }, []);
@@ -74,7 +88,7 @@ const User = () => {
                   <th className="p-2 text-white text-center">Name</th>
                   <th className="p-2 text-white text-center">Email</th>
                   <th className="p-2 text-white text-center">Register Date</th>
-                 
+                  <th className="p-2 text-white text-center">Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -86,10 +100,10 @@ const User = () => {
                     <td className="p-4 text-center">
                     {user?.profilePicture ? (
               <>
-              <img
+              <img onClick={()=>{navigate(`/admin/userprofile?uId=${user._id}`)}}
                 src={`http://localhost:8000/uploads/profile/${user.profilePicture}`}
                 alt="Profile"
-                className="h-12 w-12 rounded-full mx-auto"
+                className="h-12 w-12 rounded-full mx-auto cursor-pointer"
                 
               /></>
             
@@ -103,7 +117,12 @@ const User = () => {
                     <td className="p-4 text-center">{user.name}</td>
                     <td className="p-4 text-center">{user.email}</td>
                     <td className="p-4 text-center">{formatDateTime(user.timestamp)}</td>
-                    
+                  <td className="p-4 text-center"><button
+                        className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-2 rounded"
+                        onClick={() => handleDelete(user._id)}
+                      >
+                        <RiDeleteBinLine />
+                      </button></td>  
                   </tr>
                 ))}
               </tbody>

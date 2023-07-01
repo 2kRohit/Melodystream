@@ -9,13 +9,15 @@ import {RiUserSettingsFill, RiVideoUploadLine} from "react-icons/ri"
 import {GiHamburgerMenu} from "react-icons/gi"
 import {IoMdArrowDropdown, IoMdSettings} from "react-icons/io"
 import {FiSave} from "react-icons/fi"
-import { CgProfile } from 'react-icons/cg';
+import { CgLock, CgProfile } from 'react-icons/cg';
+import axios from 'axios';
 export default function Sidebar({ children }) {
   const navigate = useNavigate();
   
   const { authInfo,handleLogout } = useAuth();
   const { isLoggedIn } = authInfo;
   const isVerified = authInfo.profile?.isVerified;
+  const userId=authInfo.profile?.id;
   const [search,setSearch]=useState();
   const handleChange = (e) => {
     setSearch(e.target.value);
@@ -53,7 +55,31 @@ export default function Sidebar({ children }) {
   const toggleDropdownn = () => {
     setShowDropdownn(!showDropdownn);
   };
-  
+  const [formdata,setFormData]=useState([])
+  useEffect(() => {
+    // Fetch user data on component mount
+    const fetchUser = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8000/api/user/${userId}`);
+        const { name, email, bio, profilePicture } = response.data;
+        setFormData({ name, email, bio ,profilePicture});
+        
+      } catch (error) {
+        console.error('Error fetching user:', error);
+      }
+    };
+    if (userId) {
+      fetchUser();
+     
+    }
+    const timer = setTimeout(() => {
+      // Your action here
+    }, 5000);
+
+    // Clean up the timer
+    return () => clearTimeout(timer);
+
+  }, []);
 
   return (
     <div className="flex bg-gray-900 text-white min-h-screen">
@@ -70,17 +96,17 @@ export default function Sidebar({ children }) {
           {authInfo.profile?.profilePicture ? (
               <>
               <img
-                src={`http://localhost:8000/uploads/profile/${authInfo.profile.profilePicture}`}
+                src={`http://localhost:8000/uploads/profile/${formdata.profilePicture}`}
                 alt="Profile"
                 className="h-24 w-24 rounded-full mx-auto"
                 onClick={toggleDropdownn}
               />
-             <div className=''> {authInfo.profile?.name}</div>
-             <div className=''> {authInfo.profile?.email}</div></>
+             <div className=''> {formdata.name}</div>
+             <div className=''> {formdata.email}</div></>
             ) : (<><button onClick={toggleDropdownn}> 
              <FaUserCircle className="w-24 h-24 text-gray-500 mx-auto" /></button>
-              <div className=''> {authInfo.profile?.name}</div>
-              <div className=''> {authInfo.profile?.email}</div>
+              <div className=''> {formdata.name}</div>
+              <div className=''> {formdata.email}</div>
               </>
             )}</div></div>
           <div className="border-t border-gray-600 mb-2"></div>
@@ -96,7 +122,7 @@ export default function Sidebar({ children }) {
               <span className='flex items-center text-base ml-4'> <RiVideoUploadLine/><span className='ml-4'>Upload Video</span></span>
               </Link>
             </li>
-           
+            
             <li>
               <Link to="/viewhistory" className="block bg-transparent py-1  px-4 rounded-md hover:bg-gray-600">
               <span className='flex items-center text-base ml-4'> <FaHistory/><span className='ml-4'>View History</span></span>
@@ -177,18 +203,25 @@ onChange={handleChange}
             <div className="relative inline-block ml-2">
              
               {showDropdownn && (
-                <div className="absolute right-0 mt-6 py-2 w-36 bg-gray-800 rounded-md shadow-lg z-10">
+                <div className="absolute right-0 mt-6 py-2 w-44 border-4 border-gray-600 bg-transparent rounded-md shadow-lg z-10">
                  
                   <Link
                     to="/profile"
-                    className="blocktext-white hover:bg-gray-500"
+                    className="block text-white hover:bg-gray-500"
                   >
-                    <span className='flex items-center text-lg mt-1 ml-4'> <CgProfile/>
-                    <span className='ml-4'>Profile</span></span>
+                    <span className='flex items-center'> <CgProfile/>
+                    <span className='ml-2'>Profile</span></span>
+                  </Link>
+                  <Link
+                    to="/video/changepassword"
+                    className="block text-white hover:bg-gray-500"
+                  >
+                    <span className='flex items-center'> <CgLock/>
+                    <span className='ml-2'>Change Password</span></span>
                   </Link>
                   <Link onClick={logout}  className="block text-white hover:bg-gray-500">
-                  <span className='flex items-center text-lg mt-1 ml-4'> <MdLogout/>
-                    <span className='ml-4'>Logout</span></span>
+                  <span className='flex items-center '> <MdLogout/>
+                    <span className='ml-2'>Logout</span></span>
                   </Link>
                 </div>
               )}

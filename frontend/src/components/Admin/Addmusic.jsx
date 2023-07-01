@@ -9,7 +9,7 @@ const UploadMusic = () => {
   const [formData, setFormData] = useState({
     title: '',
     description: '',
-    
+    mood:'',
     category: '',
     language: '',
      artist:'',
@@ -22,11 +22,13 @@ const UploadMusic = () => {
   const [categories, setCategories] = useState([]);
   const [language, setlanguage] = useState([]);
   const [artist, setartist] = useState([]);
+  const [mood, setmood] = useState([]);
 
   useEffect(() => {
     fetchCategories();
     fetchlanguage();
     fetchartist();
+    fetchmood();
   }, []);
 
   const fetchCategories = async () => {
@@ -49,6 +51,14 @@ const UploadMusic = () => {
     try {
       const response = await axios.get('http://localhost:8000/api/music/getartist');
       setartist(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  const fetchmood = async () => {
+    try {
+      const response = await axios.get('http://localhost:8000/api/music/getmood');
+      setmood(response.data);
     } catch (error) {
       console.error(error);
     }
@@ -82,7 +92,7 @@ const UploadMusic = () => {
   };
 
   const validateForm = () => {
-    const { title, description,  category, musicFile,language,artist ,thumbnailFile} = formData;
+    const { title, description,  category, musicFile,language,artist ,mood,thumbnailFile} = formData;
     const errors = {};
 
     if (!title.trim()) {
@@ -93,6 +103,9 @@ const UploadMusic = () => {
       }
     if (!description.trim()) {
       errors.description = 'Description is required';
+    }
+    if (!mood.trim()) {
+      errors.mood = 'Mood is required';
     }
 
     
@@ -121,7 +134,7 @@ const UploadMusic = () => {
     const isValid = validateForm();
 
     if (isValid) {
-      const { title, description,category, musicFile, thumbnailFile,language ,artist} = formData;
+      const { title, description,category, musicFile, thumbnailFile,language ,artist,mood} = formData;
 
       // Create form data object to send to the server
       const data = new FormData();
@@ -131,6 +144,7 @@ const UploadMusic = () => {
       data.append('language', language);
       data.append('category', category);
       data.append('artist', artist);
+      data.append('mood',mood);
 
       data.append('musicFile', musicFile);
       if (thumbnailFile) {
@@ -149,7 +163,7 @@ const UploadMusic = () => {
         setFormData({
           title: '',
           description: '',
-         
+         mood:'',
           category: '',
           language: '',
           artist:'',
@@ -299,6 +313,29 @@ const UploadMusic = () => {
               ))}
             </select>
             {errors.artist && <p className="text-red-500">{errors.artist}</p>}
+          </div>
+          <div>
+            <label htmlFor="Mood" className="block mb-2 font-medium text-white">
+              Mood
+            </label>
+            <select
+              id="mood"
+              name="mood"
+              value={formData.mood}
+              onChange={handleChange}
+              className={`w-full text-black px-3 py-2 border rounded focus:outline-none focus:ring ${
+                errors.mood ? 'border-red-500' : 'focus:ring-blue-500'
+              }`}
+              required
+            >
+              <option value="">Select a Mood</option>
+              {mood.map((md) => (
+                <option key={md.id} value={md.name}>
+                  {md.name}
+                </option>
+              ))}
+            </select>
+            {errors.mood && <p className="text-red-500">{errors.mood}</p>}
           </div>
           <div>
             <label htmlFor="musicFile" className="block mb-2 font-medium text-white">

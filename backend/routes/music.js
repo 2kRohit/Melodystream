@@ -10,6 +10,7 @@ const Favourite=require('../models/favourite.js')
 const Musichistory=require('../models/musichistory.js')
 const Playlistname=require('../models/playlistname.js')
 const Playlist=require('../models/playlist.js')
+const Mood=require('../models/mood.js')
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
       cb(null, './uploads/music');
@@ -25,7 +26,7 @@ const storage = multer.diskStorage({
  
   router.post('/upload-music', upload.fields([{ name: 'musicFile', maxCount: 1 }, { name: 'thumbnailFile', maxCount: 1 }]), async (req, res) => {
     try {
-      const { title, description, tags, category,language,artist } = req.body;
+      const { title, description, tags, category,language,artist,mood } = req.body;
       const { musicFile, thumbnailFile } = req.files;
       const musicPath = musicFile[0].path;
       const thumbnailPath = thumbnailFile ? thumbnailFile[0].path : null;
@@ -35,7 +36,7 @@ const storage = multer.diskStorage({
       const newMusic = new Music({
         title,
         description,
-        
+        mood,
         category,
         musicPath,
         thumbnailPath,
@@ -93,12 +94,32 @@ const storage = multer.diskStorage({
       res.status(500).json({ message: 'An error occurred ' });
     }
   });
-
-  router.post('/addartist', async (req, res) => {
+  const storagee = multer.diskStorage({
+    destination: (req, file, cb) => {
+      cb(null, './uploads/music');
+    },
+    filename: (req, file, cb) => {
+      const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
+      const extension = path.extname(file.originalname);
+      const Filename = `${file.fieldname}-${uniqueSuffix}${extension}`;
+      cb(null, Filename);
+    },
+  });
+  
+  
+  const uploadd= multer({
+    storage: storagee,
+    limits: {
+      fileSize: 1024 * 1024 * 5, // 5MB
+    },
+  });
+  router.post('/addartist',upload.single('selectedImage'), async (req, res) => {
     try {
       const { name } = req.body;
+     
+      const imagePath=req.file?req.file.path:null
   
-      const artist = new Artist({ name });
+      const artist = new Artist({ name,imagePath});
   await artist.save();
   
       res.status(201).json(artist);
@@ -480,6 +501,92 @@ router.get('/searchmusic/:q', async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server Error' });
+  }
+});
+
+
+router.post('/addmood', async (req, res) => {
+  try {
+    const { name } = req.body;
+   
+
+
+    const mood = new Mood({ name});
+await mood.save();
+
+    res.status(201).json(mood);
+  } catch (error) {
+    console.error('Error inserting mood:', error);
+    res.status(500).json({ error: 'Failed to insert mood' });
+  }
+});
+router.get('/getmood', async (req, res) => {
+  try {
+   
+    const mood = await Mood.find();
+      res.status(201).json(mood);
+    
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'An error occurred ' });
+  }
+});
+router.delete('/mood/:id', async (req, res) => {
+  try {
+   const {id}=req.params
+    const mood = await Mood.findByIdAndDelete({_id:id});
+      res.status(201).json({ message: 'Deleted' });
+    
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'An error occurred ' });
+  }
+});
+
+
+//imp
+router.get('/getmusicbyartist/:artist', async (req, res) => {
+  try {
+   const {artist}=req.params
+    const music = await Music.find({artist});
+      res.status(201).json(music);
+    
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'An error occurred ' });
+  }
+});
+router.get('/getmusicbylanguage/:language', async (req, res) => {
+  try {
+   const {language}=req.params
+    const music = await Music.find({language});
+      res.status(201).json(music);
+    
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'An error occurred ' });
+  }
+});
+router.get('/getmusicbymood/:mood', async (req, res) => {
+  try {
+   const {mood}=req.params
+    const music = await Music.find({mood});
+      res.status(201).json(music);
+    
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'An error occurred ' });
+  }
+});
+router.get('/getmusicbycategory/:category', async (req, res) => {
+  try {
+   const {category}=req.params
+    const music = await Music.find({category});
+      res.status(201).json(music);
+    
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'An error occurred ' });
   }
 });
 

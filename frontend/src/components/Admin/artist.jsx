@@ -22,28 +22,42 @@ const CategoryForm = () => {
       console.error('Error fetching artist:', error);
     }
   };
-
+  const [selectedImage, setSelectedImage] = useState(null);
+  const handleImageUpload = (event) => {
+    const file = event.target.files[0];
+    setSelectedImage(file);
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     try {
-      // Send a POST request to the backend to insert the category
-      await axios.post('http://localhost:8000/api/music/addartist', { name });
-
+      const formData = new FormData();
+      formData.append('name', name);
+      formData.append('selectedImage', selectedImage);
+  
+      // Send a POST request to the backend to insert the artist
+      await axios.post('http://localhost:8000/api/music/addartist', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+  
       // Reset the form after successful submission
       setName('');
-      alert('artist inserted successfully!');
-
-      // Refresh the category list
+      setSelectedImage(null);
+      alert('Artist inserted successfully!');
+  
+      // Refresh the artist list
       fetchCategories();
-
-      // Hide the add category form
+  
+      // Hide the add artist form
       setShowAddCategory(false);
     } catch (error) {
       console.error('Error inserting artist:', error);
       alert('Failed to insert artist. Please try again.');
     }
   };
+  
 
   const handleDeleteCategory = async (categoryId) => {
     const confirmDelete = window.confirm('Are you sure you want to delete this artist?');
@@ -77,7 +91,7 @@ const CategoryForm = () => {
   return (
     <Sidebar>
       <div className="flex justify-center items-center h-full bg-gray-900">
-        <div className="w-full max-w-lg border-4 border-gray-600 mt-5">
+        <div className="w-4/6 border-4 border-gray-600 mt-5">
           <div className="flex justify-between items-center mb-4">
             <h1 className="text-2xl text-blue-500 italic font-semibold flex items-center mx-auto mt-4">
               <span className="mr-2 ml-24 mb-2 mt-4">Artist</span>
@@ -110,7 +124,22 @@ const CategoryForm = () => {
                       placeholder="Enter artist name"
                       required
                     />
+
                   </div>
+                  <div className="mb-4">
+                    <label htmlFor="name" className="block text-white font-medium mb-2">
+                      Upload Image
+                    </label>
+                  <input
+  type="file"
+  id="image"
+  name="image"
+  accept="image/*"
+  onChange={handleImageUpload}
+  className="w-full bg-gray-700 text-white rounded-md px-4 py-2 focus:outline-none"
+  required
+/></div>
+
                   <div className="flex justify-center space-x-4">
                     <button
                       type="submit"
@@ -142,22 +171,29 @@ const CategoryForm = () => {
                 onChange={handleSearch}
               />
             </div>
-            <table className="w-full bg-gray-900 rounded-lg text-center">
+            <table className="w-full bg-gray-900 rounded-lg text-center justify-center">
               <thead>
                 <tr>
-                  <th className="p-2 text-white text-center">Artist</th>
-                  <th className="p-2 text-white text-center">Creation Time</th>
-                  <th className="p-2 text-white text-center">Actions</th>
+                <th className="p-4 text-white text-center">Image</th>
+                  <th className="p-4 text-white text-center">Artist</th>
+                  <th className="p-4 text-white text-center">Creation Time</th>
+                  <th className="p-4 text-white text-center">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredCategories.map((category) => (
                   <tr key={category.id}>
-                    <td className="p-2">{category.name}</td>
-                    <td className="p-2">{formatDateTime(category.createdAt)}</td>
-                    <td className="p-2">
+                    <td className="p-4"><img 
+                src={`http://localhost:8000/${category.imagePath}`}
+                alt="Profile"
+                className="h-12 w-12 rounded-full mx-auto cursor-pointer"
+                
+              /></td>
+                    <td className="p-4">{category.name}</td>
+                    <td className="p-4">{formatDateTime(category.createdAt)}</td>
+                    <td className="p-4">
                       <div
-                        className="text-red-500 hover:text-red-600 text-center font-bold text-2xl ml-7 cursor-pointer"
+                        className="p-4 text-red-500 hover:text-red-600 text-center  mx-auto font-bold text-2xl ml-20 cursor-pointer"
                         onClick={() => handleDeleteCategory(category._id)}
                       >
                       <MdOutlineDeleteForever/>

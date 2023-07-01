@@ -5,9 +5,11 @@ import { VscNewFolder } from 'react-icons/vsc';
 import { useState } from 'react';
 import { useAuth } from '../../hooks';
 import axios from 'axios';
-import { MdDriveFileRenameOutline } from 'react-icons/md';
+
 import { BsTrash } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
+import { CgAdd } from 'react-icons/cg';
+import { FaFolderPlus } from 'react-icons/fa';
 
 const Playlist = () => {
   const [show, setshow] = useState(false);
@@ -64,17 +66,22 @@ const Playlist = () => {
   useEffect(() => {
     fetchplaylist();
   }, []);
-
+// Utility function to generate random gradient colors
+const getRandomGradient = () => {
+  const randomHue = Math.floor(Math.random() * 360);
+  const gradient = `linear-gradient(${randomHue}deg, hsl(${randomHue}, 70%, 50%), hsl(${randomHue + 60}, 70%, 50%))`;
+  return gradient;
+};
   return (
     <Sidebar>
       <div className="bg-gray-900 text-white p-6">
         <h1 className="text-3xl mx-auto text-center font-semibold mb-4 italic text-blue-500">Playlist</h1>
         <div className="flex items-center justify-end mb-4">
           <button
-            className="text-green-400 text-xl cursor-pointer bg-transparent border-none outline-none"
+            className="text-gray-300 text-3xl cursor-pointer bg-transparent border-none outline-none"
             onClick={() => setshow(!show)}
           >
-            <VscNewFolder />
+            <FaFolderPlus />
           </button>
         </div>
         {show && (
@@ -118,7 +125,7 @@ const Playlist = () => {
         )}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mt-4">
           {playlist.map((playlistItem) => (
-            <div className="bg-gray-800 p-6 rounded-lg shadow-xl" key={playlistItem.id}>
+            <div className=" p-6 rounded-lg shadow-xl" style={{ background: getRandomGradient() }} key={playlistItem.id}>
               <div className="flex items-center justify-between mb-4 cursor-pointer">
                 <h2  onClick={()=>{view(playlistItem.name)}} className="text-xl font-bold">{playlistItem.name}</h2>
                 <div>
@@ -130,7 +137,7 @@ const Playlist = () => {
                 </div>
               </div>
               <div className="flex items-center space-x-2">
-                <RiMusic2Line className="text-purple-500 text-4xl" />
+                <RiMusic2Line className="text-white text-4xl" />
               
               </div>
             </div>

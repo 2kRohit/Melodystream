@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import { RiEyeLine } from 'react-icons/ri';
 
 import { BsFillFileEarmarkSpreadsheetFill, BsFillFileEarmarkTextFill } from 'react-icons/bs';
+import { FaUserCircle } from 'react-icons/fa';
 
 
 
@@ -41,7 +42,7 @@ const ViewVerifiedVideos = () => {
     }
   };
 
- 
+ const navigate=useNavigate()
 
   useEffect(() => {
     fetchVideo();
@@ -236,7 +237,7 @@ alert('verified')
                 type="text"
                 value={searchQuery}
                 onChange={handleSearch}
-                placeholder="Search by name or video"
+                placeholder="Search..."
                 className=" px-1 w-64 py-2 rounded-lg bg-gray-900  text-white focus:outline-none"
               />
             
@@ -248,7 +249,7 @@ alert('verified')
             <table className="w-full bg-gray-900 rounded-lg">
               <thead>
                 <tr>
-               
+                <th className="p-2 text-white text-center">Profile</th>
                   <th className="p-2 text-white text-center">Reported by</th>
                   <th className="p-2 text-white text-center">Reason</th>
                   <th className="p-2 text-white text-center">file</th>
@@ -264,11 +265,32 @@ alert('verified')
                     key={report.id}
                    
                   >
+                     <td className="p-4 text-center">
+                    {report.user?.profilePicture ? (
+              <>
+              <img
+               onClick={()=>{navigate(`/verifier/userprofile?uId=${report.user._id}`)}}
+                src={`http://localhost:8000/uploads/profile/${report.user.profilePicture}`}
+                alt="Profile"
+                className="h-12 w-12 rounded-full mx-auto cursor-pointer"
+                
+              /></>
+            
+            ) : (<>
+             <FaUserCircle
+              onClick={()=>{navigate(`/verifier/userprofile?uId=${report.user._id}`)}}
+              className="w-12 h-12 text-gray-500 mx-auto cursor-pointer" />
+            
+              </>
+            )}
+                   </td>
                     
                     <td className="p-4 text-center">{report.user.name}</td>
                     <td className="p-4 text-center">{report.reason}</td>
                     <td className="p-4 text-center" >
-                   <button onClick={()=>{window.open(`http://localhost:8000/${report.filePath}`, '_blank',`width=${900},height=${700}`);}}> <BsFillFileEarmarkTextFill/></button></td>
+                    {report.filePath ? (     <button
+     onClick={()=>{window.open(`http://localhost:8000/${report.filePath}`, '_blank',`width=${900},height=${700}`);}}> <BsFillFileEarmarkTextFill/></button>
+                    ):(<p>No file</p>)}</td>
                     
 
 

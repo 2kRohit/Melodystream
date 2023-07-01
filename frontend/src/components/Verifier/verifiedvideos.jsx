@@ -65,7 +65,7 @@ const VideoList = () => {
                 type="text"
                 value={searchQuery}
                 onChange={handleSearch}
-                placeholder="Search by title or category or name"
+                placeholder="Search..."
                 className=" px-1 w-64 py-2 rounded-lg bg-gray-900  text-white focus:outline-none"
               />
             
@@ -96,15 +96,17 @@ const VideoList = () => {
                     {video.user?.profilePicture ? (
               <>
               <img
+               onClick={()=>{navigate(`/verifier/userprofile?uId=${video.user._id}`)}}
                 src={`http://localhost:8000/uploads/profile/${video.user.profilePicture}`}
                 alt="Profile"
-                className="h-12 w-12 rounded-full mx-auto"
+                className="h-12 w-12 rounded-full mx-auto cursor-pointer"
                 
               /></>
             
             ) : (<>
              <FaUserCircle
-              className="w-12 h-12 text-gray-500 mx-auto" />
+              onClick={()=>{navigate(`/verifier/userprofile?uId=${video.user._id}`)}}
+              className="w-12 h-12 text-gray-500 mx-auto cursor-pointer" />
             
               </>
             )}

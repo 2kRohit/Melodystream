@@ -219,10 +219,13 @@ useEffect(() => {
     setSearchTerm(e.target.value);
   };
 
-  const filteredTracks = trackList?.filter((track) => {
-    const trackTitle = track.title?.toLowerCase();
-    return trackTitle?.includes(searchTerm.toLowerCase());
-  });
+  const filteredTracks = trackList.filter(
+    (music) =>
+      music.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      music.category.toLowerCase().includes(searchTerm.toLowerCase())||
+      music.language.toLowerCase().includes(searchTerm.toLowerCase())||
+      music.artist.toLowerCase().includes(searchTerm.toLowerCase())||
+      music.mood.toLowerCase().includes(searchTerm.toLowerCase()));
 if(trackList.length===0) return(<Sidebar><h1 className='text-3xl text-gray-600 text-center mx-auto align-middle'>Your playlist is empty...</h1></Sidebar>)
   return (
     <Sidebar>

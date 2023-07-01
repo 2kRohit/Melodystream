@@ -207,7 +207,7 @@ useEffect(() => {
       <div className="container mx-auto py-6  ">
         {currentTrack && (
          <div className="flex flex-col pl-6 text-justify items-center">
-         <div className="bg-gray-800 flex items-center justify-center relative rounded-lg p-6 shadow-lg">
+         <div className="bg-gray-800 flex items-center justify-center relative rounded-lg p-6 w-4/6 shadow-lg">
            {currentTrack.thumbnailPath ? (
              <img
                src={`http://localhost:8000/${currentTrack.thumbnailPath}`}
@@ -220,7 +220,7 @@ useEffect(() => {
            <div className="pl-6">
              <h1 className="text-3xl font-bold mb-2 text-white">{currentTrack.title}</h1>
              <p className="text-lg text-gray-300">Artist :{currentTrack.artist}</p>
-             <p className="text-gray-400 mt-2">Description :{currentTrack.description}</p>
+             <p className="text-gray-400 mt-2 ">Description :{currentTrack.description}</p>
              <p className="text-gray-400 mt-2">Category :{currentTrack.category}</p>
              <p className="text-gray-400 mt-2">Language :{currentTrack.language}</p>
            </div>

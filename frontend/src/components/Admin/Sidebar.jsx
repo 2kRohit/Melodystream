@@ -9,8 +9,9 @@ import {RiDashboardFill, RiFolderMusicFill, RiUserFill, RiUserFollowFill, RiUser
 import {GiHamburgerMenu} from "react-icons/gi"
 import {IoMdArrowDropdown, IoMdSettings} from "react-icons/io"
 import {FiSave} from "react-icons/fi"
-import { CgProfile } from 'react-icons/cg';
+import { CgLock, CgProfile } from 'react-icons/cg';
 import { TbFileMusic } from 'react-icons/tb';
+import axios from 'axios';
 export default function Sidebar({ children }) {
   const navigate = useNavigate();
   
@@ -60,7 +61,32 @@ export default function Sidebar({ children }) {
     setShowDropdownn(!showDropdownn);
   };
   
+  const userId=authInfo.profile?.id;
+  const [formdata,setFormData]=useState([])
+  useEffect(() => {
+    // Fetch user data on component mount
+    const fetchUser = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8000/api/user/${userId}`);
+        const { name, email, bio, profilePicture } = response.data;
+        setFormData({ name, email, bio ,profilePicture});
+        
+      } catch (error) {
+        console.error('Error fetching user:', error);
+      }
+    };
+    if (userId) {
+      fetchUser();
+     
+    }
+    const timer = setTimeout(() => {
+      // Your action here
+    }, 5000);
 
+    // Clean up the timer
+    return () => clearTimeout(timer);
+
+  }, [userId]);
   return (
     <div className="flex bg-gray-900 text-white min-h-screen">
       {/* Sidebar */}
@@ -73,20 +99,20 @@ export default function Sidebar({ children }) {
           </Link><div className='mt-0'>
             
           <div className='text-center  '>
-          {authInfo.profile?.profilePicture ? (
+          {formdata.profilePicture ? (
               <>
               <img
-                src={`http://localhost:8000/uploads/profile/${authInfo.profile.profilePicture}`}
+                src={`http://localhost:8000/uploads/profile/${formdata.profilePicture}`}
                 alt="Profile"
                 className="h-24 w-24 rounded-full mx-auto"
                
               />
-             <div className=''> {authInfo.profile?.name}</div>
-             <div className=''> {authInfo.profile?.email}</div></>
+             <div className=''> {formdata.name}</div>
+             <div className=''> {formdata.email}</div></>
             ) : (<>
              <FaUserCircle className="w-24 h-24 text-gray-500 mx-auto" />
-              <div className=''> {authInfo.profile?.name}</div>
-              <div className=''> {authInfo.profile?.email}</div>
+              <div className=''> {formdata.name}</div>
+              <div className=''> {formdata.email}</div>
               </>
             )}</div></div>
           <div className="border-t border-gray-600 mb-2"></div>
@@ -138,6 +164,14 @@ export default function Sidebar({ children }) {
                     className="block bg-transparent py-1 border-b-0 px-4 hover:bg-gray-600"
                   >
                    Language
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/addmusicmood"
+                    className="block bg-transparent py-1 border-b-0 px-4 hover:bg-gray-600"
+                  >
+                   Mood
                   </Link>
                 </li>
                 <li>
@@ -193,19 +227,7 @@ export default function Sidebar({ children }) {
             <span className="text-indigo-500 font-extrabold ml-5 italic">MELODY</span>
             <span className="text-white font-bold italic">STREAM</span>
           </Link>
-          {/* Search Bar */}
-          <form onSubmit={handleSubmit} className="flex items-center bg-gray-800 rounded-full px-4 py-2 w-full md:w-1/2 lg:w-1/3 mx-auto border-2 border-gray-800 hover:border-white">
-            <input
-              type="text"
-              name="search"
-              placeholder="Search videos..."
-              className="w-full bg-transparent text-white focus:outline-none"
-onChange={handleChange}
-            />
-            <button type="submit" className="bg-gray-800 text-white py-1 px-2 rounded-full ml-2 ">
-              <FaSearch className="text-white" />
-            </button>
-          </form>
+         
 
           {/* User Profile Picture or User Icon */}
           <div className="flex items-center">
@@ -222,18 +244,26 @@ onChange={handleChange}
             <div className="relative inline-block ml-2">
              
               {showDropdownn && (
-                <div className="absolute right-0 mt-6 py-2 w-36 bg-gray-800 rounded-md shadow-lg z-10">
+                <div className="absolute border-4 border-gray-600 right-0 mt-6 py-2 w-44 bg-transparent rounded-md shadow-lg z-10">
                  
                   <Link
-                    to="/profile"
-                    className="blocktext-white hover:bg-gray-500"
+                    to="/admin/profile"
+                    className="block p-1 text-white hover:bg-gray-500"
                   >
-                    <span className='flex items-center text-lg mt-1 ml-4'> <CgProfile/>
-                    <span className='ml-4'>Profile</span></span>
+                    <span className='flex items-center'> <CgProfile/>
+                    <span className='ml-2'>Profile</span></span>
                   </Link>
-                  <Link onClick={logout}  className="block text-white hover:bg-gray-500">
-                  <span className='flex items-center text-lg mt-1 ml-4'> <MdLogout/>
-                    <span className='ml-4'>Logout</span></span>
+
+                  <Link
+                    to="/admin/changepassword"
+                    className="block text-white p-1 hover:bg-gray-500"
+                  >
+                    <span className='flex items-center '> <CgLock/>
+                    <span className='ml-2'>Change Password</span></span>
+                  </Link>
+                  <Link onClick={logout}  className="block p-1 text-white hover:bg-gray-500">
+                  <span className='flex items-center '> <MdLogout/>
+                    <span className='ml-2'>Logout</span></span>
                   </Link>
                 </div>
               )}

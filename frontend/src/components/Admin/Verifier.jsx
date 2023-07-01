@@ -10,7 +10,21 @@ import { FaUserCircle } from 'react-icons/fa';
 const User = () => {
   const [users, setUsers] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
-  
+  const handleDelete = async (userId) => {
+    const confirmDelete = window.confirm('Are you sure you want to remove this user?');
+    if (confirmDelete) {
+      try {
+        await axios.delete(`http://localhost:8000/api/admin/user/${userId}`);
+        
+        alert('User removed successfully');
+        // music deleted successfully, update the music list
+      fetchuser();
+       
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  };
   const fetchuser = async () => {
     try {
       const response = await axios.get(`http://localhost:8000/api/admin/verifier`);
@@ -58,7 +72,7 @@ const User = () => {
                 type="text"
                 value={searchQuery}
                 onChange={handleSearch}
-                placeholder="Search by title or category"
+                placeholder="Search.."
                 className=" px-1 w-64 py-2 rounded-lg bg-gray-900  text-white focus:outline-none"
               />
             
@@ -74,6 +88,7 @@ const User = () => {
                   <th className="p-2 text-white text-center">Name</th>
                   <th className="p-2 text-white text-center">Email</th>
                   <th className="p-2 text-white text-center">Register Date</th>
+                  <th className="p-2 text-white text-center">Action</th>
                  
                 </tr>
               </thead>
@@ -103,7 +118,12 @@ const User = () => {
                     <td className="p-4 text-center">{user.name}</td>
                     <td className="p-4 text-center">{user.email}</td>
                     <td className="p-4 text-center">{formatDateTime(user.timestamp)}</td>
-                    
+                    <td className="p-4 text-center"><button
+                        className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-2 rounded"
+                        onClick={() => handleDelete(user._id)}
+                      >
+                        <RiDeleteBinLine />
+                      </button></td>     
                   </tr>
                 ))}
               </tbody>

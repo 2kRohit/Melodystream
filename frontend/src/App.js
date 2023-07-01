@@ -39,6 +39,7 @@ import Verifierunverifiedreports from "./components/Verifier/unverifiedreports";
 import Music from "./components/Music/music";
 import  Addmusic from "./components/Admin/Addmusic"
 import  Addmusiccategory from "./components/Admin/musiccategory"
+import  Addmusicmood from "./components/Admin/mood"
 import  Addartist from "./components/Admin/artist"
 import  Addlanguage from "./components/Admin/language"
 import  Viewmusic from "./components/Music/viewmusic"
@@ -48,6 +49,23 @@ import  Adminviewmusic from "./components/Admin/viewmusic"
 import  Playlist from "./components/Music/playlist"
 import  Viewplaylist from "./components/Music/viewplaylist"
 import  Musicsearch from "./components/Music/musicsearch"
+import  Adminuserprofile from "./components/Admin/userprofile"
+import  Useruserprofile from "./components/video/userprofile"
+import Musicprofile from "./components/Music/Profile"
+import Adminprofile from "./components/Admin/Profile"
+import Verifierprofile from "./components/Verifier/Profile"
+import Adminchangepassword from "./components/Admin/changepassword"
+import Musicchangepassword from "./components/Music/changepassword"
+import Videochangepassword from "./components/video/changepassword"
+import Verifierchangepassword from "./components/Verifier/changepassword"
+import Artist from "./components/Music/artist"
+import Language from "./components/Music/language"
+import Mood from "./components/Music/mood"
+import Viewsong from "./components/Music/viewsong"
+import Categorymusic from "./components/Music/categorymusic"
+import All from "./components/Music/all"
+
+
 export default function App() {
   return (
     <>
@@ -92,6 +110,7 @@ export default function App() {
         <Route path="/addartist" element={<Addartist/>} />
         <Route path="/addlanguage" element={<Addlanguage/>} />
         <Route path="/addmusiccategory" element={<Addmusiccategory/>} />
+        <Route path="/addmusicmood" element={<Addmusicmood/>} />
         <Route path="/music" element={<Music/>} />
         <Route path="/viewmusic" element={<Viewmusic/>} />
         <Route path="admin/viewmusic" element={<Adminviewmusic/>} />
@@ -100,7 +119,21 @@ export default function App() {
         <Route path="/playlist" element={<Playlist/>} />
         <Route path="/viewplaylist" element={<Viewplaylist/>} />
         <Route path="/musicsearch" element={<Musicsearch/>} />
-        
+        <Route path="/admin/userprofile" element={<Adminuserprofile/>}/>
+        <Route path="/user/userprofile" element={<Useruserprofile/>}/>
+        <Route path="/music/profile" element={<Musicprofile/>}/>
+        <Route path="/admin/profile" element={<Adminprofile/>}/>
+        <Route path="/verifier/profile" element={<Verifierprofile/>}/>
+        <Route path="/admin/changepassword" element={<Adminchangepassword/>}/>
+        <Route path="/music/changepassword" element={<Musicchangepassword/>}/>
+        <Route path="/video/changepassword" element={<Videochangepassword/>}/>
+        <Route path="/verifier/changepassword" element={<Verifierchangepassword/>}/>
+        <Route path="/artist" element={<Artist/>}/>
+        <Route path="/language" element={<Language/>}/>
+        <Route path="/mood" element={<Mood/>}/>
+        <Route path="/viewsong" element={<Viewsong/>}/>
+        <Route path="/categorymusic" element={<Categorymusic/>}/>
+        <Route path="/all" element={<All/>}/>
         <Route path="*" element={<NotFound />} />
 
       </Routes>

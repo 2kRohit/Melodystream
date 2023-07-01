@@ -5,6 +5,7 @@ import Sidebar from './Sidebar';
 import { useAuth } from '../../hooks';
 import { useNavigate } from 'react-router-dom';
 import { RiDeleteBinLine, RiEyeLine, RiSearchLine } from 'react-icons/ri';
+import { FaUserCircle } from 'react-icons/fa';
 
 const VideoList = () => {
   const [videos, setVideos] = useState([]);
@@ -47,14 +48,18 @@ const VideoList = () => {
   const filteredVideos = videos.filter(
     (video) =>
       video.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      video.category.toLowerCase().includes(searchQuery.toLowerCase())
+      video.category.toLowerCase().includes(searchQuery.toLowerCase())||
+      video.user.name.toLowerCase().includes(searchQuery.toLowerCase())||
+      video.visibility.toLowerCase().includes(searchQuery.toLowerCase())||
+      video.status.toLowerCase().includes(searchQuery.toLowerCase())
+
   );
 
   return (
     <Sidebar>
-      <div className="bg-gray-900 min-h-screen flex flex-col justify-start items-center py-0">
+      <div className="bg-gray-900  flex flex-col justify-start items-center py-0">
         
-        <div className="w-full max-w-3xl overflow-x-auto border-4 border-gray-600 shadow-2xl">
+        <div className="overflow-x-auto border-4 border-gray-600 shadow-2xl">
         <h2 className="text-center text-2xl text-blue-500 italic p-1 mb-0 mt-2 font-semibold"> Video List</h2>
           <div className="flex items-center justify-between mb-0">
             <div className="relative flex items-center mt-0 ">
@@ -63,7 +68,7 @@ const VideoList = () => {
                 type="text"
                 value={searchQuery}
                 onChange={handleSearch}
-                placeholder="Search by title or category"
+                placeholder="Search..."
                 className=" px-1 w-64 py-2 rounded-lg bg-gray-900  text-white focus:outline-none"
               />
             
@@ -75,6 +80,8 @@ const VideoList = () => {
             <table className="w-full bg-gray-900 rounded-lg">
               <thead>
                 <tr>
+                <th className="p-2 text-white text-center">Profile</th>
+                  <th className="p-2 text-white text-center">Name</th>
                   <th className="p-2 text-white text-center">Title</th>
                   <th className="p-2 text-white text-center">Category</th>
                   <th className="p-2 text-white text-center">Upload Date</th>
@@ -88,6 +95,26 @@ const VideoList = () => {
                   <tr
                    
                   >
+                     <td className="p-4 text-center">
+                    {video.user?.profilePicture ? (
+              <>
+              <img
+              onClick={()=>{navigate(`/admin/userprofile?uId=${video.user._id}`)}}
+                src={`http://localhost:8000/uploads/profile/${video.user.profilePicture}`}
+                alt="Profile"
+                className="h-12 w-12 rounded-full mx-auto cursor-pointer"
+                
+              /></>
+            
+            ) : (<>
+             <FaUserCircle
+              onClick={()=>{navigate(`/admin/userprofile?uId=${video.user._id}`)}}
+              className="w-12 h-12 text-gray-500 mx-auto cursor-pointer" />
+            
+              </>
+            )}
+                   </td>
+                   <td className="p-4 text-center mx-auto">{video.user.name}</td>
                     <td className="p-4 text-center">{video.title}</td>
                     <td className="p-4 text-center">{video.category}</td>
                     <td className="p-4 text-center">{formatDateTime(video.timestamp)}</td>

@@ -7,8 +7,14 @@ const Category = require('../models/videocategory');
 const Saved = require('../models/saved');
 const History= require('../models/history');
 const Report = require('../models/report');
+const Musichistory=require("../models/musichistory")
+const Playlist=require("../models/playlist")
+
+
+
 const { isValidObjectId } = require("mongoose");
-const User=require('../models/user')
+const User=require('../models/user');
+const Favourite = require("../models/favourite");
 
 router.get('/user', async (req, res) => {
     try {
@@ -57,13 +63,69 @@ router.get('/user', async (req, res) => {
 
   router.get('/videos', async (req, res) => {
     try {
-     
-      const video = await Video.find();
-        res.status(201).json(video);
+      const videos = await Video.find({})
+        .populate({
+          path: 'userId', // Use 'userId' instead of '_id' to populate the user details
+          model: 'User',
+          select: 'profilePicture name' // Only select the 'profilePicture' field from the User model
+        })
+        .exec();
+  
+      const processedData = videos.map(video => ({
+        ...video.toObject(), // Convert the video to a plain object
+        user: video.userId.toObject()
+      }));
+  
+      res.json(processedData);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'An error occurred' });
+    }
+  });
+  
+
+
+  router.delete('/user/:id', async (req, res) => {
+    try {
+     const {id}=req.params
+      const user = await User.findByIdAndDelete({_id:id});
+      await Favourite.deleteMany({userId:id})
+      await History.deleteMany({userId:id})
+      await Musichistory.deleteMany({userId:id})
+      await Playlist.deleteMany({userId:id})
+      await Report.deleteMany({userId:id})
+      await Saved.deleteMany({userId:id})
+      await Video.deleteMany({userId:id})
+        res.status(201).json({ message: 'Deleted' });
       
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: 'An error occurred ' });
     }
   });
+
+
+  router.post('/:userid/changepassword',async(req,res)=>{
+    try{
+const {currentPassword,newPassword}=req.body
+const {userid}=req.params
+const user=await User.findOne({_id:userid})
+if (!user) return res.json('invalid user')
+
+  const matched = await user.comparePassword(currentPassword);
+  if (!matched) return res.json("Current Password mismatch!");
+  if (matched){
+    user.password=newPassword;
+    const resp=await user.save()
+    if(resp) return res.json("Password Changed")
+    return res.json('Password not changed')
+
+  }
+
+    }
+    catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'An error occurred ' });
+    }
+  })
 module.exports = router;
