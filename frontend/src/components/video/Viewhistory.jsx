@@ -170,7 +170,7 @@ const HomePage = () => {
       No videos found.
     </div>
   ) : ( videos.map((video) => (
-    <div className="bg-transparent rounded-lg cursor-pointer 
+    <div className="bg-transparent border border-gray-700 rounded-lg cursor-pointer 
     transition duration-200 shadow-lg">
             <div
             className='hover:bg-gray-700'

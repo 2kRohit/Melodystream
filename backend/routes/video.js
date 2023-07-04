@@ -7,6 +7,7 @@ const Category = require('../models/videocategory');
 const Saved = require('../models/saved');
 const History= require('../models/history');
 const Report = require('../models/report');
+const Subscriber=require('../models/subscriber')
 const { isValidObjectId } = require("mongoose");
 
 
@@ -798,4 +799,118 @@ router.delete('/:videoId/replydelete/:commentId/:replyId', async (req, res) => {
     res.status(500).json({ error: 'Server error' });
   }
 });
+
+//recommendation
+
+
+// Retrieve the user's viewing history
+// Assuming you have the necessary imports and database connection set up
+
+// Retrieve the user's viewing history
+async function getUserHistory(userId) {
+  try {
+    const userHistory = await History.find({ userId }).distinct('videoId');
+    return userHistory;
+  } catch (error) {
+    throw new Error('Failed to retrieve user history: ' + error.message);
+  }
+}
+
+// Generate video recommendations based on user history
+async function generateRecommendations(userHistory) {
+  try {
+    const unseenVideos = await Video.find({ _id: { $nin: userHistory } ,status:"verified",visibility:"public"}).select('_id');
+
+    const videoViews = await History.aggregate([
+      {
+        $group: {
+          _id: '$videoId',
+          views: { $sum: 1 },
+        },
+      },
+    ]);
+
+    const sortedVideos = videoViews.sort((a, b) => b.views - a.views); // Sort by views in descending order
+
+    const recommendations = sortedVideos.slice(0, 10).map((video) => video._id);
+
+    if (recommendations.length < 10) {
+      recommendations.push(...unseenVideos.slice(0, 10 - recommendations.length));
+    }
+
+    return recommendations;
+  } catch (error) {
+    throw new Error('Failed to generate recommendations: ' + error.message);
+  }
+}
+
+// Assuming you have an API endpoint to fetch recommended videos
+router.get('/recommendations/:userId', async (req, res) => {
+  const userId = req.params.userId;
+
+  try {
+    const userHistory = await getUserHistory(userId);
+    const recommendations = await generateRecommendations(userHistory);
+    const recommendedVideos = await Video.find({ _id: { $in: recommendations },status:"verified",visibility:"public" });
+    res.json(recommendedVideos);
+  } catch (error) {
+    console.error(error); // Log the error for debugging purposes
+    res.status(500).json({ error: 'Internal server error: ' + error.message });
+  }
+});
+
+
+//subscribers
+router.post('/:ownerId/subscriber/:userId', async (req, res) => {
+  try {
+    const { ownerId, userId } = req.params;
+    const subscriber = await Subscriber.find({ ownerId, userId });
+
+    if (subscriber.length === 0) {
+      const newSaved = new Subscriber({
+        ownerId,
+        userId,
+      });
+
+      await newSaved.save();
+      res.status(201).json({ message: 'Subscriber' });
+    } else {
+      await Subscriber.findOneAndDelete({ ownerId, userId });
+      res.status(200).json({ message: ' deleted successfully' });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'An error occurred ' });
+  }
+});
+ 
+router.get('/:ownerId/subscriberstatus/:userId', async (req, res) => {
+  try {
+    const { ownerId, userId } = req.params;
+    const saved = await Subscriber.find({ ownerId, userId });
+const status=true;
+    if (saved.length === 0) {
+      res.status(201).json({status:false});
+    } else {
+      
+      res.status(200).json({ status });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'An error occurred on saving' });
+  }
+});
+router.get('/subscribercount/:userId', async (req, res) => {
+  try {
+    const {  userId } = req.params;
+    const saved = await Subscriber.find({ userId });
+
+      res.status(200).json( saved.length );
+    
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'An error occurred ' });
+  }
+});
+
   module.exports = router;

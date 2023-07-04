@@ -589,5 +589,89 @@ router.get('/getmusicbycategory/:category', async (req, res) => {
     res.status(500).json({ message: 'An error occurred ' });
   }
 });
+//recommendation
+
+// Retrieve the user's listening history
+async function getUserListeningHistory(userId) {
+  const userHistory = await Musichistory.find({ userId }).distinct('musicId');
+  return userHistory;
+}
+
+// Generate music recommendations based on user history and mood similarity
+async function generateMusicRecommendations(userHistory) {
+  const mostListenedMood = getMostListenedMood(userHistory);
+
+  let similarMusic = await Music.find({
+    mood: mostListenedMood,
+    _id: { $nin: userHistory },
+  })
+    .limit(10)
+    .select('_id');
+
+  if (similarMusic.length < 10) {
+    const remainingCount = 10 - similarMusic.length;
+    const popularMusic = await getPopularMusic(userHistory, remainingCount);
+    similarMusic = similarMusic.concat(popularMusic);
+  }
+
+  return similarMusic;
+}
+
+// Helper function to get the user's most listened music by mood
+function getMostListenedMood(userHistory) {
+  const moodCounts = {};
+
+  for (const musicId of userHistory) {
+    const music = Music.findOne({ _id: musicId });
+    if (music.mood in moodCounts) {
+      moodCounts[music.mood]++;
+    } else {
+      moodCounts[music.mood] = 1;
+    }
+  }
+
+  let mostListenedMood = '';
+  let maxCount = 0;
+
+  for (const mood in moodCounts) {
+    if (moodCounts[mood] > maxCount) {
+      mostListenedMood = mood;
+      maxCount = moodCounts[mood];
+    }
+  }
+
+  return mostListenedMood;
+}
+
+// Helper function to get popular music based on total listens
+async function getPopularMusic(userHistory, limit) {
+  const popularMusic = await Musichistory.aggregate([
+    {
+      $group: {
+        _id: '$musicId',
+        listens: { $sum: 1 },
+      },
+    },
+    { $sort: { listens: -1 } },
+    { $limit: limit },
+  ]);
+
+  return popularMusic.map((music) => music._id);
+}
+
+router.get('/recommendations/:userId', async (req, res) => {
+  const userId = req.params.userId;
+
+  try {
+    const userHistory = await getUserListeningHistory(userId);
+    const recommendations = await generateMusicRecommendations(userHistory);
+    const recommendedMusic = await Music.find({ _id: { $in: recommendations } });
+    res.json(recommendedMusic);
+  } catch (error) {
+    console.error(error); // Log the error for debugging purposes
+    res.status(500).json({ error: 'Failed to fetch recommended music' });
+  }
+});
+
 
 module.exports = router;

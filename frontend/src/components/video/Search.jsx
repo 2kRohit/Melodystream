@@ -148,7 +148,8 @@ const HomePage = () => {
   ) : ( videos.map((video) => (
             <div
               key={video._id}
-              className="bg-transparent rounded-lg cursor-pointer hover:bg-gray-700 transition duration-200 shadow-lg"
+              className="bg-transparent border border-gray-700
+              rounded-lg cursor-pointer hover:bg-gray-700 transition duration-200 shadow-lg"
               onClick={() => handleVideoClick(video._id)}
               onMouseEnter={() => handleVideoMouseEnter(video._id)}
               onMouseLeave={() => handleVideoMouseLeave(video._id)}

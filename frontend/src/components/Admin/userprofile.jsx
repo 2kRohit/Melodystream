@@ -35,6 +35,27 @@ const HomePage = () => {
       console.error(error);
     }
   };
+  const [subscriber,setsubscriber]=useState(0)
+  const [countsubscriber,setcountsubscriber]=useState(0)
+  const handleSubscriber= async () => {
+    try {
+      const response = await axios.post(`http://localhost:8000/api/video/${uid}/subscriber/${userId}`);
+    fetchsubscriberstatus()
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  const fetchsubscriberstatus= async () => {
+    try {
+      const response = await axios.get(`http://localhost:8000/api/video/${uid}/subscriberstatus/${userId}`);
+    const {status}=response.data
+    setsubscriber(status)
+    const count= await axios.get(`http://localhost:8000/api/video/subscribercount/${uid}`);
+    setcountsubscriber(count.data)
+    } catch (error) {
+      console.error(error);
+    }
+  };
   
   const handleVideoClick = async (videoId) => {
     try {
@@ -66,6 +87,7 @@ const HomePage = () => {
   useEffect(() => {
    
     fetchVideos();
+    fetchsubscriberstatus();
   }, []);
   const totalLikes = videos.reduce((accumulator, video) => accumulator + video.likes.length, 0)
   const totaldislikes = videos.reduce((accumulator, video) => accumulator + video.dislikes.length, 0)
@@ -133,11 +155,13 @@ const HomePage = () => {
                   ) : (
                     <FaUserCircle className="w-32 h-32 text-gray-500 mr-2" />
                   )}
-                  <p className='text-2xl mx-auto text-center italic'>{user.name}</p>
+                 <p className='text-2xl mx-auto text-center italic'>{user.name}</p>
+                  <p className=' mx-auto text-center text-gray-400  '>{countsubscriber}&bull;Subscribers</p>
+
                   <p className='text-xl mx-auto text-center text-gray-400 italic'>{user.bio}</p>
-                  <p className=' mx-auto text-center text-gray-400  '>{videos.length} videos</p>
+                  <p className=' mx-auto text-center text-gray-400  '>{videos.length} Videos &bull; {views} Views</p>
                   <p className=' mx-auto text-center text-gray-400  '>{totalLikes} Likes &bull; {totaldislikes} Dislikes</p>
-                  <p className=' mx-auto text-center text-gray-400 '>{views} Views</p>
+                  
                   <div className='border-b border-0 border-gray-800 mt-4'></div>
                   </div>
         {/* Videos */}

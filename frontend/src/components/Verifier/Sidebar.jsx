@@ -30,7 +30,8 @@ export default function Sidebar({ children }) {
   };
   const isuser=()=>{
     const token = localStorage.getItem("auth-token");
-    if (!token || authInfo.profile?.role!=="verifier") navigate('/');
+    const role = localStorage.getItem("role");
+    if (!token || role!=="verifier") navigate('/');
     
   }
   useEffect(()=>{

@@ -10,15 +10,36 @@ const HomePage = () => {
   const [categories, setCategories] = useState([]);
   const [videos, setVideos] = useState([]);
   const videoRefs = useRef({});
+  const videoRef = useRef({});
   const { authInfo } = useAuth();
   const { profile } = authInfo;
   const userId = profile?.id;
-
+const [recommendation,setrecommendation]=useState([])
   useEffect(() => {
     fetchCategories();
     fetchVideos();
+    fetchrecommendation();
   }, []);
-
+  const fetchrecommendation = async () => {
+    try {
+      const response = await axios.get(`http://localhost:8000/api/video/recommendations/${userId}`);
+      console.log(response.data)
+      // Set a default value for the 'muted' property if not provided in the response
+      const videosWithDefaults = response.data.map(async (video) => {
+        const userResponse = await axios.get(`http://localhost:8000/api/user/${video.userId}`);
+        const user = userResponse.data;
+        return {
+          ...video,
+          muted: video.muted || true,
+          user: user,
+        };
+      });
+      const videosWithUserDetails = await Promise.all(videosWithDefaults);
+      setrecommendation(videosWithUserDetails);
+    } catch (error) {
+      console.error(error);
+    }
+  };
   const fetchCategories = async () => {
     try {
       const response = await axios.get('http://localhost:8000/api/video/getcategories');
@@ -73,7 +94,20 @@ const HomePage = () => {
       video.currentTime = 0;
     }
   };
+  const handleVideoMouseEnte = (videoId) => {
+    const video = videoRef.current[videoId];
+    if (video && video.readyState >= 3) {
+      video.play().catch((error) => console.error(error));
+    }
+  };
 
+  const handleVideoMouseLeav = (videoId) => {
+    const video = videoRef.current[videoId];
+    if (video) {
+      video.pause();
+      video.currentTime = 0;
+    }
+  };
   const handleToggleMute = (videoId) => {
     const video = videoRefs.current[videoId];
     if (video) {
@@ -153,13 +187,72 @@ const HomePage = () => {
             ))}
           </div>
         </div>
+{/* Recomendation*/}
+<h1 className="text-xl text-gray-400 font-bold mb-2 -mt-5 italic">Suggested for you</h1>
+<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 mt-2">
+          {recommendation.slice(0,8).map((video) => (
+            <div
+              key={video._id}
+              className="bg-transparent border border-gray-700
+              rounded-lg cursor-pointer hover:bg-gray-700 transition duration-200 shadow-lg"
+              onClick={() => handleVideoClick(video._id)}
+              onMouseEnter={() => handleVideoMouseEnte(video._id)}
+              onMouseLeave={() => handleVideoMouseLeav(video._id)}
+            >
+              {video.thumbnailPath ? (
+                <div className="relative">
+                  <video
+                    ref={(ref) => (videoRef.current[video._id] = ref)}
+                    id={`video-${video._id}`}
+                    src={`http://localhost:8000/${video.videoPath}`}
+                    alt={video.title}
+                    className="w-full h-40 object-cover rounded-t-lg"
+                    poster={`http://localhost:8000/${video.thumbnailPath}`}
+                    muted={video.muted}
+                  />
+                </div>
+              ) : (
+                <div className="relative">
+                  <video
+                    ref={(ref) => (videoRef.current[video._id] = ref)}
+                    id={`video-${video._id}`}
+                    src={`http://localhost:8000/${video.videoPath}`}
+                    alt={video.title}
+                    className="w-full h-40 object-cover rounded-t-lg"
+                    muted={video.muted}
+                  />
+                </div>
+              )}
 
+              <div className="p-4">
+                <div className="flex items-center mb-2">
+                  {video.user && video.user.profilePicture ? (
+                    <img
+                      className="w-8 h-8 rounded-full mr-2 "
+                      src={`http://localhost:8000/uploads/profile/${video.user.profilePicture}`}
+                      alt="Profile"
+                    />
+                  ) : (
+                    <FaUserCircle className="w-8 h-8 text-gray-500 mr-2" />
+                  )}
+                  <h3 className="text-lg font-bold ml-2">{video.title}</h3>
+                </div>
+                <p className="text-gray-500 ml-12">{video.user.name}</p>
+                <p className="text-gray-500 ml-12">{video.views} views  &bull; <span className="text-gray-500">{formatDateTime(video.timestamp)}</span></p>
+               
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className='border-b border-gray-700 mt-4'></div>
         {/* Videos */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 mt-4">
+        <h1 className="text-xl font-bold text-gray-400 mt-2 italic">Explore Videos</h1>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 mt-2">
           {videos.map((video) => (
             <div
               key={video._id}
-              className="bg-transparent rounded-lg cursor-pointer hover:bg-gray-700 transition duration-200 shadow-lg"
+              className="bg-transparent border border-gray-700
+               rounded-lg cursor-pointer hover:bg-gray-700 transition duration-200 shadow-lg"
               onClick={() => handleVideoClick(video._id)}
               onMouseEnter={() => handleVideoMouseEnter(video._id)}
               onMouseLeave={() => handleVideoMouseLeave(video._id)}

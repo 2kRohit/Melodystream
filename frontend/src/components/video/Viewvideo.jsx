@@ -35,6 +35,8 @@ const [savestatus,setSavestatus]=useState(false)
 const[videoId,setvideoId]=useState('')
 const[allid,setallid]=useState([])
 const [isPlaying,setIsPlaying]=useState(true)
+const [subscriber,setsubscriber]=useState(false)
+const [countsubscriber,setcountsubscriber]=useState(0)
 useEffect(()=>{
   Allid()
   },[])
@@ -319,6 +321,34 @@ const fetchsavestatus= async () => {
   }
 };
 
+//subscriber
+const handleSubscriber= async (ownerId) => {
+  try {
+    const response = await axios.post(`http://localhost:8000/api/video/${ownerId}/subscriber/${userId}`);
+  fetchsubscriberstatus()
+  } catch (error) {
+    console.error(error);
+  }
+};
+const fetchsubscriberstatus= async () => {
+  try {
+    const response = await axios.get(`http://localhost:8000/api/video/${video.userId}/subscriberstatus/${userId}`);
+  const {status}=response.data
+  setsubscriber(status)
+  const count= await axios.get(`http://localhost:8000/api/video/subscribercount/${video.userId}`);
+  setcountsubscriber(count.data)
+  } catch (error) {
+    console.error(error);
+  }
+};
+useEffect(() => {
+  const timer = setTimeout(() => {
+    fetchsubscriberstatus();
+  }, 1000);
+
+  return () => clearTimeout(timer);
+}, [fetchsubscriberstatus]);
+
 const fetchreportStatus= async () => {
   try {
     const response = await axios.get(`http://localhost:8000/api/video/${videoId}/reportstatus/${userId}`);
@@ -378,6 +408,7 @@ fetchRelatedVideos()
 fetchVideoStatus()
 fetchsavestatus()
 fetchreportStatus()
+fetchsubscriberstatus()
 },[videoId])
 
 
@@ -471,22 +502,32 @@ const formatDuration = (duration) => {
               {video.user && video.user.profilePicture ? (<>
               
     <img onClick={()=>{navigate(`/user/userprofile?uId=${video.user._id}`)}} 
-      className="w-8 h-8 rounded-full mr-2 cursor-pointer"
+      className="w-14 h-14 rounded-full mr-2 cursor-pointer"
       src={`http://localhost:8000/uploads/profile/${video.user?.profilePicture}`}
       alt="Profile"
     />
-    <p>{video.user?.name}</p>
+    <p className='-mt-5'>{video.user?.name}</p>
+  
+    <button onClick={()=>{handleSubscriber(video.user?._id)}} className={`ml-12 bg-red-600 text-lg rounded-full font-semibold px-2 py-1 ${subscriber ? 'text-white' : 'text-white'}`}>
+                 
+                 {subscriber? 'Subscribed':'Subscribe'}
+                </button>
     </>
     
   ) : (
     <>
     <FaUserCircle 
     onClick={()=>{navigate(`/user/userprofile?uId=${video.user._id}`)}} 
-    className="w-8 h-8 text-gray-500 mr-2 cursor-pointer" />
-    <p>{video.user?.name}</p>
+    className="w-14 h-14 text-gray-500 mr-2 cursor-pointer" />
+   <p className='-mt-5'>{video.user?.name}</p>
+  
+  <button onClick={()=>{handleSubscriber(video.user?._id)}} className={`ml-12 bg-red-600 text-lg rounded-full font-semibold px-2 py-1 ${subscriber ? 'text-white' : 'text-white'}`}>
+               
+               {subscriber? 'Subscribed':'Subscribe'}
+              </button>
     </>
   )}
-  <div className='ml-60 p-1 mb-0 rounded-full border border-gray-800 bg-black-500'>
+  <div className='ml-40 p-1 mb-0 rounded-full border border-gray-800 bg-black-500'>
   <button
         className={`bg-transparent  rounded-full p-2 mr-2 ${liked ? 'text-blue-400' : 'text-white'}`}
         onClick={handleLike}
@@ -563,8 +604,8 @@ onClick={report ? handleunreport : handleReportClick}
                 </div>
               </div>
               
-
-              <p className="text-gray-500 mb-0 mt-0">
+              <p className='ml-16 -mt-7 text-sm font-medium text-left text-gray-500'>{countsubscriber}&bull;subscribers</p>
+           <br/>   <p className="text-gray-500 mb-0 mt-0">
                 <RiEyeLine className="inline-block mr-4" />
                 {video.views} views
               </p>
@@ -739,7 +780,7 @@ onClick={report ? handleunreport : handleReportClick}
   <div className="grid gap-4">
     {relatedVideos.map((relatedVideo) => (
       <Link key={relatedVideo._id} to={`/Viewvideo?videoId=${relatedVideo._id}`}>
-        <div className="relative overflow-hidden rounded">
+        <div className="relative overflow-hidden rounded border border-gray-700">
           <video
             src={`http://localhost:8000/${relatedVideo.videoPath}`}
            

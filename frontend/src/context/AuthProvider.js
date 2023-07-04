@@ -32,6 +32,7 @@ export default function AuthProvider({ children }) {
     });
 
     localStorage.setItem("auth-token", user.token);
+    localStorage.setItem("role", user.role);
   };
 
   const isAuth = async () => {
@@ -55,6 +56,7 @@ export default function AuthProvider({ children }) {
 const navigate=useNavigate()
   const handleLogout = () => {
     localStorage.removeItem("auth-token");
+    localStorage.removeItem("role");
     setAuthInfo({ ...defaultAuthInfo });
     navigate('/',{replace:true})
     

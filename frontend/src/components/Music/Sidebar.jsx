@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { FaFileVideo, FaHistory, FaLanguage, FaSearch } from 'react-icons/fa';
+import { FaBell, FaFileVideo, FaHistory, FaLanguage, FaSearch } from 'react-icons/fa';
 import { FiMenu, FiUser, FiLogOut } from 'react-icons/fi';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks';
 import { FaUserCircle } from 'react-icons/fa';
 import {MdDashboard, MdFavorite, MdFavoriteBorder, MdLibraryAdd, MdLibraryMusic, MdLogout, MdOutlineFavorite, MdOutlineSettings, MdOutlineSettingsSuggest, MdRecentActors, MdVideoLibrary} from "react-icons/md"
-import {TbFileMusic, TbMoodSearch, TbPlaylist} from "react-icons/tb"
+import {TbBellFilled, TbFileMusic, TbMoodSearch, TbPlaylist} from "react-icons/tb"
 import {BiHistory} from "react-icons/bi"
 import {IoMdArrowDropdown, IoMdSettings} from "react-icons/io"
 import {FiSave} from "react-icons/fi"
@@ -13,7 +13,7 @@ import { CgLock, CgProfile } from 'react-icons/cg';
 import axios from 'axios';
 export default function Sidebar({ children }) {
   const navigate = useNavigate();
-  
+  const count=5
   const { authInfo,handleLogout } = useAuth();
   const { isLoggedIn } = authInfo;
   const isVerified = authInfo.profile?.isVerified;
@@ -28,7 +28,8 @@ export default function Sidebar({ children }) {
   };
   const isuser=()=>{
     const token = localStorage.getItem("auth-token");
-    if (!token) navigate('/');
+    const role = localStorage.getItem("role");
+    if (!token || role !=="user") navigate('/');
     
   }
   useEffect(()=>{
@@ -193,13 +194,18 @@ onChange={handleChange}
           </form>
 
           {/* User Profile Picture or User Icon */}
-          <div className="flex items-center">
+          <div className="flex items-center ">
            
-            
+           <TbBellFilled className="w-7 h-7 text-gray-400 " />
+      {count && count > 0 && (
+        <div className="absolute top-0 right-0 bg-red-500 text-white font-extrabold rounded-full px-1 mr-16 mt-2">
+          <p style={{ fontSize: '10px' }}>{count}</p>
+        </div>
+      )}
              
             
            <button onClick={toggleDropdownn}> 
-             <MdOutlineSettings className="w-7 h-7 text-gray-400 mr-2 " />
+             <MdOutlineSettings className="w-7 h-7 text-gray-400 mr-2 ml-5 " />
            
              </button>
          
@@ -207,7 +213,7 @@ onChange={handleChange}
             <div className="relative inline-block ml-2">
              
               {showDropdownn && (
-                <div className="absolute right-0 mt-6 py-2 w-44 bg-transparent border-4 border-gray-600 rounded-md shadow-lg z-10">
+                <div className="absolute right-0 mt-6 py-2 w-44 bg-gray-900 border-4 border-gray-600 rounded-md shadow-lg z-10">
                  
                   <Link
                     to="/music/profile"

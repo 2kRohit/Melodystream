@@ -29,7 +29,8 @@ export default function Sidebar({ children }) {
   };
   const isuser=()=>{
     const token = localStorage.getItem("auth-token");
-    if (!token) navigate('/');
+    const role = localStorage.getItem("role");
+    if (!token || role !=="user") navigate('/');
     
   }
   useEffect(()=>{

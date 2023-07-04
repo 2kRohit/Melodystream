@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks';
 import Container from './Container';
 import Navbar from './user/Navbar';
+import BackgroundVideo from './background';
+import { FaMusic, FaVideo } from 'react-icons/fa';
 
 const Home = () => {
   const { authInfo } = useAuth();
@@ -14,11 +16,25 @@ const Home = () => {
   const navigateToVerification = () => {
     navigate('/auth/verification', { state: { user: authInfo.profile } });
   };
+  const isuser=()=>{
+  const role = localStorage.getItem("role");
+  if (role&& role ==="admin") navigate('/admin/dashboard');
+  if (role&& role ==="verifier") navigate('/verifier/dashboard');
+  }
+  useEffect(()=>{
+isuser()
+  },[])
+  
+    const [icons, setIcons] = useState([]);
+  
+    
 
+ 
   return (
     <>
     <Navbar />
-    <div className="bg-gray-900 dark:bg-gray-900 min-h-screen flex items-center justify-center">
+    
+    <div className="bg-gray-900 dark:bg-gray-900 min-h-screen flex items-center justify-center -mt-10">
       
         {isLoggedIn && !isVerified ? (
           <p className="text-lg text-center bg-blue-50 p-2">
@@ -32,6 +48,7 @@ const Home = () => {
           </p>
         ) : (
           <div>
+        
             <h1 className="text-4xl font-bold mb-4 text-white dark:text-white">
               Welcome to MelodyStream!
             </h1>

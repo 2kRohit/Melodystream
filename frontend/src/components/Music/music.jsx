@@ -21,6 +21,7 @@ const MusicList = () => {
   const { authInfo } = useAuth();
   const { profile } = authInfo;
   const userId = profile?.id;
+  const [recommendation,setrecommendation]=useState([])
 //category
 useEffect(() => {
   async function fetchcategory() {
@@ -107,6 +108,20 @@ const handlemoodClick = async (value) => {
 };
 
 
+useEffect(() => {
+  async function fetchRecommendation() {
+    try {
+      const response = await axios.get(`http://localhost:8000/api/music/recommendations/${userId}`);
+      console.log(response.data)
+      setrecommendation(response.data);
+    } catch (error) {
+      console.log('Error fetching music:', error);
+    }
+  }
+
+  fetchRecommendation();
+}, []);
+
   useEffect(() => {
     async function fetchMusic() {
       try {
@@ -138,7 +153,45 @@ const handlemoodClick = async (value) => {
   return (
     <Sidebar>
       <div className="container mx-auto px-4 py-0 bg-gray-900 text-white">
-        <h1 className="text-3xl font-bold mb-4">Discover Music</h1>
+      <h1 className="text-xl text-white font-bold mb-4 italic">Suggestions for you</h1>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
+          {recommendation.slice(0, 5).map((music) => (
+            <div
+              key={music._id}
+              className="relative bg-gray-800 rounded-lg overflow-hidden shadow-lg cursor-pointer transform hover:-translate-y-2 transition-transform hover:shadow-2xl"
+              onClick={() => handleMusicClick(music._id)}
+            >
+              <div className="relative h-72">
+                {music.thumbnailPath ? (
+                  <img
+                    src={`http://localhost:8000/${music.thumbnailPath}`}
+                    alt={music.title}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="flex items-center justify-center w-full h-full bg-gray-700">
+                    <FiMusic className="text-gray-500 text-5xl" />
+                  </div>
+                )}
+                <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
+                  <button className="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-md flex items-center">
+                    <FiPlay className="mr-2" />
+                    Play
+                  </button>
+                </div>
+                <div className="absolute bottom-4 left-4">
+                  <p className="text-lg font-bold text-white truncate">{music.title}</p>
+                  <div className="flex items-center text-sm text-gray-300 mt-1">
+                
+                    <span>{music.artist}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <h1 className="text-xl text-white font-bold mb-4 mt-4 italic">Discover Music</h1>
         <Link to="/all" className='-mt-10 float-right text-gray-500 font-bold'>show all</Link>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
           {musicList.slice(0, 10).map((music) => (
@@ -178,7 +231,7 @@ const handlemoodClick = async (value) => {
         </div>
 
 {/* profile */}
-<h1 className="text-3xl font-bold mb-4 mt-4">Artist</h1>
+<h1 className="text-xl text-white font-bold mb-4 mt-4 italic">Artist</h1>
 <Link to="/artist" className='-mt-10 float-right text-gray-500 font-bold'>show all</Link>
 
 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
@@ -220,7 +273,7 @@ const handlemoodClick = async (value) => {
 
 
 {/* Category */}
-<h1 className="text-3xl font-bold mb-4 mt-4">Category</h1>
+<h1 className="text-xl text-white font-bold mb-4 mt-4 italic">Category</h1>
 <Link to="/categorymusic" className='-mt-10 float-right text-gray-500 font-bold'>show all</Link>
 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
           {category.slice(0,5).map((music) => (
@@ -254,7 +307,7 @@ const handlemoodClick = async (value) => {
         </div> 
 
    {/* Mood */}
-<h1 className="text-3xl font-bold mb-4 mt-4">Mood</h1>
+<h1 className="text-xl text-white font-bold mb-4 mt-4 italic">Mood</h1>
 <Link to="/mood" className='-mt-10 float-right text-gray-500 font-bold'>show all</Link>
 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
           {mood.slice(0, 5).map((music) => (
@@ -289,7 +342,7 @@ const handlemoodClick = async (value) => {
 
 
 {/* Language */}
-<h1 className="text-3xl font-bold mb-4 mt-4">Language</h1>
+<h1 className="text-xl text-white font-bold mb-4 mt-4 italic">Language</h1>
 <Link to="/language" className='-mt-10 float-right text-gray-500 font-bold'>show all</Link>
 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
           {language.slice(0, 5).map((music) => (
