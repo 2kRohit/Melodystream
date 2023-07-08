@@ -4,7 +4,7 @@ import { FiMenu, FiUser, FiLogOut } from 'react-icons/fi';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks';
 import { FaUserCircle } from 'react-icons/fa';
-import {MdDashboard, MdLibraryAdd, MdLogout, MdOutlineSettings, MdOutlineSettingsSuggest, MdVideoLibrary} from "react-icons/md"
+import {MdDashboard, MdLibraryAdd, MdLogout, MdOutlinePermContactCalendar, MdOutlineSettings, MdOutlineSettingsSuggest, MdVideoLibrary} from "react-icons/md"
 import {RiDashboardFill, RiUserFill, RiUserFollowFill, RiUserSettingsFill, RiVideoUploadLine} from "react-icons/ri"
 import {GiHamburgerMenu} from "react-icons/gi"
 import {IoMdArrowDropdown, IoMdSettings} from "react-icons/io"
@@ -20,6 +20,7 @@ export default function Sidebar({ children }) {
   const isVerified = authInfo.profile?.isVerified;
   const [search,setSearch]=useState();
   const [showreport,setshowreport]=useState(false);
+  const [showcontact,setshowcontact]=useState(false);
   const handleChange = (e) => {
     setSearch(e.target.value);
   };
@@ -179,6 +180,31 @@ export default function Sidebar({ children }) {
                
               </ul>
             </li>
+
+            <li>
+              <a
+                className="block bg-transparent py-1  px-4 rounded-md hover:bg-gray-600 flex items-center"
+                onClick={()=>{setshowcontact(!showcontact)}}
+              >
+             <span className='flex items-center text-base ml-4'> <MdOutlinePermContactCalendar/><span className='ml-4'>Contact</span></span>
+                <IoMdArrowDropdown className={`ml-1 mt-1 transform ${showcontact ? 'rotate-180' : ''}`} />
+              </a>
+              <ul className={`mt-0 ml-12 bg-gray-800  space-y-1 ${showcontact ? '' : 'hidden'}`}>
+                <li>
+                  <Link
+                    to="/verifier/contact"
+                    className="block bg-transparent py-1 border-b-0 px-4 hover:bg-gray-600"
+                  >
+                   Unverified Contact
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/verifier/verifiedcontact" className="block bg-transparent py-1  px-4 border-b-0 hover:bg-gray-600">
+                     Verified Contact
+                  </Link>
+                </li>
+              </ul>
+            </li> 
 
           </ul>
         </div>

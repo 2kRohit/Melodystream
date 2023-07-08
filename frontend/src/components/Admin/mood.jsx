@@ -28,8 +28,11 @@ const CategoryForm = () => {
 
     try {
       // Send a POST request to the backend to insert the mood
-      await axios.post('http://localhost:8000/api/music/addmood', { name });
-
+    const res=  await axios.post('http://localhost:8000/api/music/addmood', { name });
+    if (res.status===204){
+      alert('Mood already exist')
+  
+    }else{
       // Reset the form after successful submission
       setName('');
       alert('Mood inserted successfully!');
@@ -38,7 +41,7 @@ const CategoryForm = () => {
       fetchCategories();
 
       // Hide the add mood form
-      setShowAddmood(false);
+      setShowAddmood(false);}
     } catch (error) {
       console.error('Error inserting mood:', error);
       alert('Failed to insert mood. Please try again.');

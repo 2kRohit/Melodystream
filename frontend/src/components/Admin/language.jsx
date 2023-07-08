@@ -28,8 +28,11 @@ const CategoryForm = () => {
 
     try {
       // Send a POST request to the backend to insert the category
-      await axios.post('http://localhost:8000/api/music/addlanguage', { name });
-
+     const res= await axios.post('http://localhost:8000/api/music/addlanguage', { name });
+     if (res.status===204){
+      alert('Language already exist')
+  
+    }else{
       // Reset the form after successful submission
       setName('');
       alert('language inserted successfully!');
@@ -38,7 +41,7 @@ const CategoryForm = () => {
       fetchCategories();
 
       // Hide the add category form
-      setShowAddCategory(false);
+      setShowAddCategory(false);}
     } catch (error) {
       console.error('Error inserting language:', error);
       alert('Failed to insert language. Please try again.');

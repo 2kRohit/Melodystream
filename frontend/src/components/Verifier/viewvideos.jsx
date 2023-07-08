@@ -6,11 +6,14 @@ import { RiArrowDownSLine, RiArrowUpSLine, RiEyeLine, RiReplyLine } from 'react-
 
 import { BsFillFileEarmarkSpreadsheetFill, BsFillFileEarmarkTextFill } from 'react-icons/bs';
 import { FaRegTrashAlt, FaUserCircle } from 'react-icons/fa';
+import Showuser from './showuser';
 
 
 
 
 const ViewVerifiedVideos = () => {
+  const [like,setlike]=useState(false)
+  const [dislike,setdislike]=useState(false)
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const videoId = searchParams.get('videoId');
@@ -543,14 +546,17 @@ alert('verified')
                   <span className="text-gray-300 text-sm ml-2">{video.comments.length}</span>
                 </div>
               </div>
-              <div className="flex items-center mt-2">
+              <div onClick={()=>{setlike(!like)}} className="flex items-center mt-2 cursor-pointer">
                 <span className="text-gray-500 text-sm">Likes:</span>
                 <span className="text-gray-300 text-sm ml-2">{video.likes.length}</span>
+                <span className={`${like?'':'hidden'}`}><Showuser prop1={'Liked by'} prop2={video._id}  />
+         </span>
               </div>
-              <div className="flex items-center mt-2">
+              <div onClick={()=>{setdislike(!dislike)}} className="flex items-center mt-2 cursor-pointer">
                 <span className="text-gray-500 text-sm">Dislikes:</span>
                 <span className="text-gray-300 text-sm ml-2">{video.dislikes.length}</span>
-              </div>
+                <span className={`${dislike?'':'hidden'}`}><Showuser prop1={'Disliked by'} prop2={video._id}  />
+             </span> </div>
               <div className="flex items-center mt-2 cursor-pointer" onClick={()=>{setreportview(!reportview)}}>
                 <span className="text-gray-500 text-sm">Reports:</span>
                 <span className="text-gray-300 text-sm ml-2">{reports ? reports.length : 'Loading...'}</span>

@@ -5,12 +5,13 @@ import Sidebar from './Sidebar';
 import { GoMute, GoUnmute } from 'react-icons/go';
 import { FaUserCircle } from 'react-icons/fa';
 import { useAuth } from '../../hooks';
+import Showuser from './showuser';
 
 const HomePage = () => {
     const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const uid = searchParams.get('uId');
-
+  const [show,setshow]=useState(false)
   const [videos, setVideos] = useState([]);
   const [user,setuser]=useState([])
   const videoRefs = useRef({});
@@ -88,7 +89,7 @@ const HomePage = () => {
    
     fetchVideos();
     fetchsubscriberstatus();
-  }, []);
+  }, [uid]);
   const totalLikes = videos.reduce((accumulator, video) => accumulator + video.likes.length, 0)
   const totaldislikes = videos.reduce((accumulator, video) => accumulator + video.dislikes.length, 0)
   const views= videos.reduce((accumulator, video) => accumulator + video.views, 0)
@@ -153,10 +154,12 @@ const HomePage = () => {
                       alt="Profile"
                     />
                   ) : (
-                    <FaUserCircle className="w-32 h-32 text-gray-500 mr-2" />
+                    <FaUserCircle className="w-32 h-32 text-gray-500 mr-2 mx-auto" />
                   )}
                  <p className='text-2xl mx-auto text-center italic'>{user.name}</p>
-                  <p className=' mx-auto text-center text-gray-400  '>{countsubscriber}&bull;Subscribers</p>
+                 <p className=' mx-auto text-center text-gray-400 cursor-pointer ' onClick={()=>{setshow(!show)}}>{countsubscriber}&bull;Subscribers
+                  <span className={`${show?'':'hidden'}`}><Showuser prop1={'Subscribers'} prop2={uid}  />
+         </span></p>
 
                   <p className='text-xl mx-auto text-center text-gray-400 italic'>{user.bio}</p>
                   <p className=' mx-auto text-center text-gray-400  '>{videos.length} Videos &bull; {views} Views</p>

@@ -36,12 +36,16 @@ const CategoryForm = () => {
       formData.append('selectedImage', selectedImage);
   
       // Send a POST request to the backend to insert the artist
-      await axios.post('http://localhost:8000/api/music/addartist', formData, {
+     const res= await axios.post('http://localhost:8000/api/music/addartist', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
-  
+  console.log(res)
+  if (res.status===204){
+    alert('Artist already exist')
+
+  }else{
       // Reset the form after successful submission
       setName('');
       setSelectedImage(null);
@@ -51,7 +55,7 @@ const CategoryForm = () => {
       fetchCategories();
   
       // Hide the add artist form
-      setShowAddCategory(false);
+      setShowAddCategory(false);}
     } catch (error) {
       console.error('Error inserting artist:', error);
       alert('Failed to insert artist. Please try again.');

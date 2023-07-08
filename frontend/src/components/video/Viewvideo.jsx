@@ -8,8 +8,10 @@ import { MdReport} from 'react-icons/md'
 import Sidebar from './Sidebar';
 import { useAuth } from '../../hooks';
 import {TbSun, TbSunOff} from 'react-icons/tb'
+import Showuser from './showuser';
 
 const VideoPage = () => {
+ 
   const navigate=useNavigate()
   const { authInfo } = useAuth();
   const { profile } = authInfo;
@@ -37,6 +39,10 @@ const[allid,setallid]=useState([])
 const [isPlaying,setIsPlaying]=useState(true)
 const [subscriber,setsubscriber]=useState(false)
 const [countsubscriber,setcountsubscriber]=useState(0)
+const [showlikes,setshowlikes]=useState(false)
+const [showdislikes,setshowdislikes]=useState(false)
+const [showsubscribers,setshowsubscribers]=useState(false)
+
 useEffect(()=>{
   Allid()
   },[])
@@ -526,21 +532,28 @@ const formatDuration = (duration) => {
                {subscriber? 'Subscribed':'Subscribe'}
               </button>
     </>
-  )}
+  )} 
   <div className='ml-40 p-1 mb-0 rounded-full border border-gray-800 bg-black-500'>
   <button
         className={`bg-transparent  rounded-full p-2 mr-2 ${liked ? 'text-blue-400' : 'text-white'}`}
-        onClick={handleLike}
+       
       >
-        <FaThumbsUp className="inline-block mr-1 text-xl  " />
-        {video.likes.length} 
+        <FaThumbsUp className="inline-block mr-1 text-xl  "  onClick={handleLike}/>      
+         <span onClick={()=>{setshowlikes(!showlikes)}}
+          > {video.likes.length}</span><span className={`${showlikes?'':'hidden'}`}><Showuser prop1={'Liked by'} prop2={video._id}  />
+         </span>
       </button>
+      
       <button
         className={`bg-transparent  rounded-full p-2 mr-2 ${disliked ? 'text-red-700' : 'text-white'}`}
-        onClick={handleDislike}
+       
       >
-        <FaThumbsDown className="inline-block mr-1 text-xl " />
-        {video.dislikes.length} 
+        <FaThumbsDown   onClick={handleDislike} className="inline-block mr-1 text-xl " />
+   
+   
+        <span onClick={()=>{setshowdislikes(!showdislikes)}}
+          > {video.dislikes.length}</span><span className={`${showdislikes?'':'hidden'}`}><Showuser prop1={'Disliked by'} prop2={video._id}  />
+         </span>
       </button>
                 <button onClick={handleShare} className="bg-transparent text-white rounded-full p-2 mr-2">
                   <FaShare className="inline-block mr-1 text-xl" />
@@ -604,7 +617,9 @@ onClick={report ? handleunreport : handleReportClick}
                 </div>
               </div>
               
-              <p className='ml-16 -mt-7 text-sm font-medium text-left text-gray-500'>{countsubscriber}&bull;subscribers</p>
+              <p onClick={()=>{setshowsubscribers(!showsubscribers)}} className={`ml-16 -mt-7 text-sm font-medium text-left text-gray-500 cursor-pointer`}>{countsubscriber}&bull;subscribers
+              <span  className={`${showsubscribers?'':'hidden'}`}><Showuser prop1={'Subscribers'} prop2={video.userId}  />
+         </span></p>
            <br/>   <p className="text-gray-500 mb-0 mt-0">
                 <RiEyeLine className="inline-block mr-4" />
                 {video.views} views

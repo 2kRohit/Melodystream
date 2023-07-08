@@ -28,10 +28,10 @@ export default function Navbar() {
         <div className="hidden md:block">
           <div className="ml-10 flex items-baseline space-x-4">
             <Link to='/' className="text-white hover:text-gray-300 px-3 py-2 rounded-md text-sm font-medium">Home</Link>
-           
+            <Link to='/contact' className="text-white hover:text-gray-300 px-3 py-2 rounded-md text-sm font-medium">Contact</Link>
+            <Link to='/about' className="text-white hover:text-gray-300 px-3 py-2 rounded-md text-sm font-medium">About Us</Link>
 {isLoggedIn ? (<>
-   <Link to='/auth/video' className="text-white hover:text-gray-300 px-3 py-2 rounded-md text-sm font-medium">Video</Link>
-   <Link to='/music' className="text-white hover:text-gray-300 px-3 py-2 rounded-md text-sm font-medium">Music</Link>           
+   
    <button
                   onClick={handleLogout}
                   className="text-white hover:text-gray-300 px-3 py-2 rounded-md text-sm font-medium"

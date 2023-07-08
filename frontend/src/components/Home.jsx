@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks';
 import Container from './Container';
 import Navbar from './user/Navbar';
-import BackgroundVideo from './background';
+
 import { FaMusic, FaVideo } from 'react-icons/fa';
 
 const Home = () => {

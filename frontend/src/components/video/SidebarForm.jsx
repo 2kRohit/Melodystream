@@ -11,6 +11,7 @@ import {IoMdArrowDropdown, IoMdSettings} from "react-icons/io"
 import {FiSave} from "react-icons/fi"
 import { CgLock, CgProfile } from 'react-icons/cg';
 import axios from 'axios';
+import Showuser from './showuser';
 export default function Sidebar({ children }) {
   const navigate = useNavigate();
   
@@ -42,6 +43,7 @@ export default function Sidebar({ children }) {
     navigate(`/search?q=${search}`)
     
   };
+  const [show,setshow]=useState(false)
   const [showSidebar, setShowSidebar] = useState(false);
   
   const [showDropdown, setShowDropdown] = useState(false);
@@ -57,6 +59,15 @@ export default function Sidebar({ children }) {
     setShowDropdownn(!showDropdownn);
   };
   const [formdata,setFormData]=useState([])
+  const[countsubscriber,setcountsubscriber]=useState(0)
+  const fetchsubscriberstatus= async () => {
+    try {
+    const count= await axios.get(`http://localhost:8000/api/video/subscribercount/${userId}`);
+    setcountsubscriber(count.data)
+    } catch (error) {
+      console.error(error);
+    }
+  };
   useEffect(() => {
     // Fetch user data on component mount
     const fetchUser = async () => {
@@ -71,7 +82,7 @@ export default function Sidebar({ children }) {
     };
     if (userId) {
       fetchUser();
-     
+     fetchsubscriberstatus();
     }
     const timer = setTimeout(() => {
       // Your action here
@@ -81,7 +92,7 @@ export default function Sidebar({ children }) {
     return () => clearTimeout(timer);
 
   }, []);
-
+  
   return (
     <div className="flex bg-gray-900 text-white min-h-screen">
       {/* Sidebar */}
@@ -103,7 +114,9 @@ export default function Sidebar({ children }) {
                 onClick={toggleDropdownn}
               />
              <div className=''> {formdata.name}</div>
-             <div className=''> {formdata.email}</div></>
+             <div onClick={()=>{navigate(`/user/userprofile?uId=${userId}`)}} className='italic text-sm text-gray-400 cursor-pointer'> <span>{countsubscriber}&bull;Subscribers</span>
+          </div>
+             </>
             ) : (<><button onClick={toggleDropdownn}> 
              <FaUserCircle className="w-24 h-24 text-gray-500 mx-auto" /></button>
               <div className=''> {formdata.name}</div>

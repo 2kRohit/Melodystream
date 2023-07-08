@@ -64,8 +64,12 @@ import Mood from "./components/Music/mood"
 import Viewsong from "./components/Music/viewsong"
 import Categorymusic from "./components/Music/categorymusic"
 import All from "./components/Music/all"
-
-
+import Contact from "./components/Contact"
+import About from "./components/About"
+import Admincontact from "./components/Admin/Contact"
+import Adminverifiedcontact from "./components/Admin/Verifiedcontact"
+import Verifiercontact from "./components/Verifier/Contact"
+import Verifierverifiedcontact from "./components/Verifier/Verifiedcontact"
 export default function App() {
   return (
     <>
@@ -78,7 +82,8 @@ export default function App() {
         <Route path="/auth/forget-password" element={<ForgetPassword />} />
         <Route path="/auth/reset-password" element={<ConfirmPassword />} />
         <Route path="/auth/video" element={<Dashboard/>} />
-      
+      <Route path="/contact" element={<Contact/>}/>
+      <Route path="/about" element={<About/>}/>
         <Route path="/auth/upload-video" element={<Uploadvideo/>} />
         <Route path="/auth/unverified-videos" element={<Unverifiedvideos/>} />
         <Route path="/viewunverifiedvideo" element={<ViewUnverifiedVideos/>} />
@@ -134,6 +139,10 @@ export default function App() {
         <Route path="/viewsong" element={<Viewsong/>}/>
         <Route path="/categorymusic" element={<Categorymusic/>}/>
         <Route path="/all" element={<All/>}/>
+        <Route path="admin/contact" element={<Admincontact/>}/>
+        <Route path="admin/verifiedcontact" element={<Adminverifiedcontact/>}/>
+        <Route path="verifier/contact" element={<Verifiercontact/>}/>
+        <Route path="verifier/verifiedcontact" element={<Verifierverifiedcontact/>}/>
         <Route path="*" element={<NotFound />} />
 
       </Routes>

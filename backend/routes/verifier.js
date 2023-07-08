@@ -8,7 +8,9 @@ const Saved = require('../models/saved');
 const History= require('../models/history');
 const Report = require('../models/report');
 const User=require('../models/user');
+const Contact=require('../models/contact')
 const { isValidObjectId } = require("mongoose");
+const { generateMailTransporter } = require("../utils/mail");
 
 router.get('/unverifiedvideos', async (req, res) => {
     try {
@@ -241,4 +243,66 @@ router.get('/unverifiedvideos', async (req, res) => {
       res.status(500).json({ message: 'An error occurred' });
     }
   });
+  router.post('/contact',async(req,res)=>{
+    try{
+const{name,email,description}=req.body
+const status='not verified'
+const resp=new Contact({name,email,description,status})
+await resp.save()
+res.json("done");
+    }catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "error occured" });
+    }
+  });
+  router.get('/unverifiedcontact', async (req, res) => {
+    try {
+   
+      const user = await Contact.find({status:'not verified'})
+      res.json(user);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'An error occurred' });
+    }
+  });
+  router.get('/verifiedcontact', async (req, res) => {
+    try {
+   
+      const user = await Contact.find({status:'verified'})
+      res.json(user);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'An error occurred' });
+    }
+  });
+  router.post('/verifycontact/:_id/:reply', async (req, res) => {
+    try {
+      const { _id, reply } = req.params;
+      const contact = await Contact.findById(_id);
+      if (!contact) {
+        return res.status(404).json({ message: 'Contact not found' });
+      }
+  
+      contact.status = 'verified';
+      contact.reply = reply;
+      await contact.save();
+  
+      const transport = generateMailTransporter();
+      await transport.sendMail({
+        from: 'verifier@melodystream.com',
+        to: contact.email, // Assuming `user` is a typo and you meant `contact.email`
+        subject: 'Reply for your message',
+        html: `
+          <h1>MELODYSTREAM</h1>
+          <p>${reply}</p>
+        `,
+      });
+  
+      res.json(contact);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'An error occurred' });
+    }
+  });
+  
 module.exports = router;

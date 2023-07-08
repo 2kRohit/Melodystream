@@ -32,7 +32,7 @@ exports.create = async (req, res) => {
   var transport = generateMailTransporter();
 
   transport.sendMail({
-    from: "verification@reviewapp.com",
+    from: "verification@melodystream.com",
     to: newUser.email,
     subject: "Email Verification",
     html: `
@@ -74,7 +74,7 @@ exports.verifyEmail = async (req, res) => {
   var transport = generateMailTransporter();
 
   transport.sendMail({
-    from: "verification@reviewapp.com",
+    from: "verification@melodystream.com",
     to: user.email,
     subject: "Welcome Email",
     html: "<h1>Welcome to our app and thanks for choosing us.</h1>",
@@ -128,7 +128,7 @@ exports.resendEmailVerificationToken = async (req, res) => {
   var transport = generateMailTransporter();
 
   transport.sendMail({
-    from: "verification@reviewapp.com",
+    from: "verification@melodystream.com",
     to: user.email,
     subject: "Email Verification",
     html: `
@@ -138,7 +138,7 @@ exports.resendEmailVerificationToken = async (req, res) => {
   });
 
   res.json({
-    message: "New OTP has been sent to your registered email accout.",
+    message: "New OTP has been sent to your registered email account.",
   });
 };
 

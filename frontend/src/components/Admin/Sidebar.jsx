@@ -4,7 +4,7 @@ import { FiMenu, FiUser, FiLogOut } from 'react-icons/fi';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks';
 import { FaUserCircle } from 'react-icons/fa';
-import {MdDashboard, MdLibraryAdd, MdLibraryMusic, MdLogout, MdOutlineSettings, MdOutlineSettingsSuggest, MdOutlineVideoLibrary, MdVideoLibrary} from "react-icons/md"
+import {MdDashboard, MdLibraryAdd, MdLibraryMusic, MdLogout, MdOutlinePermContactCalendar, MdOutlineSettings, MdOutlineSettingsSuggest, MdOutlineVideoLibrary, MdVideoLibrary} from "react-icons/md"
 import {RiDashboardFill, RiFolderMusicFill, RiUserFill, RiUserFollowFill, RiUserSettingsFill, RiVideoUploadLine} from "react-icons/ri"
 import {GiHamburgerMenu} from "react-icons/gi"
 import {IoMdArrowDropdown, IoMdSettings} from "react-icons/io"
@@ -14,7 +14,7 @@ import { TbFileMusic } from 'react-icons/tb';
 import axios from 'axios';
 export default function Sidebar({ children }) {
   const navigate = useNavigate();
-  
+  const [showcontact,setshowcontact]=useState(false)
   const { authInfo,handleLogout } = useAuth();
   const { isLoggedIn } = authInfo;
   const isVerified = authInfo.profile?.isVerified;
@@ -89,9 +89,9 @@ export default function Sidebar({ children }) {
 
   }, [userId]);
   return (
-    <div className="flex bg-gray-900 text-white min-h-screen">
+    <div className="flex bg-gray-900 text-white max-h-fit">
       {/* Sidebar */}
-      <div className={` sticky top-0 h-screen bg-transparent shadow-2xl mr-2
+      <div className={` sticky top-0 min-h-screen bg-transparent shadow-2xl mr-2
        w-1/6 ${showSidebar ? '' : 'hidden'}`}>
         {/* Sidebar content */}
         <div className="p-4 ">
@@ -211,7 +211,30 @@ export default function Sidebar({ children }) {
                 </li>
               </ul>
             </li>
-            
+            <li>
+              <a
+                className="block bg-transparent py-1  px-4 rounded-md hover:bg-gray-600 flex items-center"
+                onClick={()=>{setshowcontact(!showcontact)}}
+              >
+             <span className='flex items-center text-base ml-4'> <MdOutlinePermContactCalendar/><span className='ml-4'>Contact</span></span>
+                <IoMdArrowDropdown className={`ml-1 mt-1 transform ${showcontact ? 'rotate-180' : ''}`} />
+              </a>
+              <ul className={`mt-0 ml-12 bg-gray-800  space-y-1 ${showcontact ? '' : 'hidden'}`}>
+                <li>
+                  <Link
+                    to="/admin/contact"
+                    className="block bg-transparent py-1 border-b-0 px-4 hover:bg-gray-600"
+                  >
+                   Unverified Contact
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/admin/verifiedcontact" className="block bg-transparent py-1  px-4 border-b-0 hover:bg-gray-600">
+                     Verified Contact
+                  </Link>
+                </li>
+              </ul>
+            </li> 
           </ul>
         </div>
       </div>

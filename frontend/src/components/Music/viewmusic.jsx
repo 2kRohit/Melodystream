@@ -381,6 +381,7 @@ useEffect(() => {
                     <h4 className="text-white text-lg font-bold">Select a Playlist</h4>
                     
                   </div>
+                  <div className="max-h-64 overflow-y-auto">
                   <ul className="text-white px-6 py-4">
                     {playlist.map((p) => (
                       <li
@@ -392,7 +393,7 @@ useEffect(() => {
                         <span className="truncate">{p.name}</span>
                       </li>
                     ))}
-                  </ul>
+                  </ul></div>
                   <div className="px-6 py-4 bg-gray-800 rounded-b-lg flex justify-end">
                     <button
                       onClick={() => setShowPlaylist(false)}

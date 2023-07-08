@@ -188,14 +188,17 @@ router.get('/getcategories', async (req, res) => {
 router.post('/categories', async (req, res) => {
   try {
     const { name } = req.body;
-
+    const check= await Category.findOne({name})
+    if(check){
+      res.status(204).json("Already exist");
+    }else{
     // Create a new category
     const category = new Category({ name });
 
     // Save the category to the database
     await category.save();
 
-    res.status(201).json(category);
+    res.status(201).json(category);}
   } catch (error) {
     console.error('Error inserting category:', error);
     res.status(500).json({ error: 'Failed to insert category' });
@@ -900,10 +903,10 @@ const status=true;
     res.status(500).json({ message: 'An error occurred on saving' });
   }
 });
-router.get('/subscribercount/:userId', async (req, res) => {
+router.get('/subscribercount/:ownerId', async (req, res) => {
   try {
-    const {  userId } = req.params;
-    const saved = await Subscriber.find({ userId });
+    const {  ownerId } = req.params;
+    const saved = await Subscriber.find({ ownerId });
 
       res.status(200).json( saved.length );
     
@@ -913,4 +916,84 @@ router.get('/subscribercount/:userId', async (req, res) => {
   }
 });
 
+
+//liked user details
+router.get('/:videoId/liked-users', async (req, res) => {
+  const { videoId } = req.params;
+
+  try {
+    const video = await Video.findById(videoId).populate('likes.userId');
+    
+    if (!video) {
+      return res.status(404).json({ error: 'Video not found' });
+    }
+
+    const likedUsers = video.likes.map(like => like.userId);
+    const userDetails = likedUsers.map(user => ({
+      userId:user._id,
+      name: user.name,
+      email: user.email,
+      profilePicture:user.profilePicture
+     
+    }));
+
+    res.json({ likedUsers: userDetails });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+//disliked
+router.get('/:videoId/disliked-users', async (req, res) => {
+  const { videoId } = req.params;
+
+  try {
+    const video = await Video.findById(videoId).populate('dislikes.userId');
+    
+    if (!video) {
+      return res.status(404).json({ error: 'Video not found' });
+    }
+
+    const likedUsers = video.dislikes.map(like => like.userId);
+    const userDetails = likedUsers.map(user => ({
+      userId:user._id,
+      name: user.name,
+      email: user.email,
+      profilePicture:user.profilePicture
+     
+    }));
+
+    res.json({ likedUsers: userDetails });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+//subscribers data
+router.get('/:userId/subscribers', async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    const subscribers = await Subscriber.find({ ownerId: userId }).populate('userId');
+    
+    // Create an array to store the subscriber details
+    const subscriberDetails = [];
+
+    subscribers.forEach(subscriber => {
+      const user = subscriber.userId;
+      const userDetails = {
+        userId:user._id,
+      name: user.name,
+      email: user.email,
+      profilePicture:user.profilePicture
+      };
+      subscriberDetails.push(userDetails);
+    });
+
+    res.json({ subscribers: subscriberDetails });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
   module.exports = router;

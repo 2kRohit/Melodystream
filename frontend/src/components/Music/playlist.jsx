@@ -33,11 +33,15 @@ const Playlist = () => {
 
     try {
       // Send a POST request to the backend to insert the category
-      await axios.post(`http://localhost:8000/api/music/addplaylist/${userId}`, { name });
+      const res=await axios.post(`http://localhost:8000/api/music/addplaylist/${userId}`, { name });
+      if (res.status===204){
+        alert('Playlist already exist')
+    
+      }else{
       setname('');
       alert('Playlist created successfully!');
       fetchplaylist();
-      setshow(false);
+      setshow(false);}
     } catch (error) {
       console.error('Error inserting playlist:', error);
       alert('Failed to create. Please try again.');

@@ -57,14 +57,17 @@ const storage = multer.diskStorage({
   router.post('/addmusiccategory', async (req, res) => {
     try {
       const { name } = req.body;
-  
+      const check= await Musiccategory.findOne({name})
+      if(check){
+        res.status(204).json("Already exist");
+      }else{
       // Create a new category
       const category = new Musiccategory({ name });
   
       // Save the category to the database
       await category.save();
   
-      res.status(201).json(category);
+      res.status(201).json(category);}
     } catch (error) {
       console.error('Error inserting category:', error);
       res.status(500).json({ error: 'Failed to insert category' });
@@ -118,11 +121,14 @@ const storage = multer.diskStorage({
       const { name } = req.body;
      
       const imagePath=req.file?req.file.path:null
-  
+  const check= await Artist.findOne({name})
+  if(check){
+    res.status(204).json("Already exist");
+  }else{
       const artist = new Artist({ name,imagePath});
   await artist.save();
   
-      res.status(201).json(artist);
+      res.status(201).json(artist);}
     } catch (error) {
       console.error('Error inserting artist:', error);
       res.status(500).json({ error: 'Failed to insert artist' });
@@ -154,11 +160,14 @@ const storage = multer.diskStorage({
   router.post('/addlanguage', async (req, res) => {
     try {
       const { name } = req.body;
-  
+      const check= await Language.findOne({name})
+      if(check){
+        res.status(204).json("Already exist");
+      }else{
       const language = new Language({ name });
   await language.save();
   
-      res.status(201).json(language);
+      res.status(201).json(language);}
     } catch (error) {
       console.error('Error inserting language:', error);
       res.status(500).json({ error: 'Failed to insert language' });
@@ -382,12 +391,16 @@ router.post('/addplaylist/:userId', async (req, res) => {
   try {
     const { name } = req.body;
     const {userId} =req.params
+    const check= await Playlistname.findOne({name,userId})
+    if(check){
+      res.status(204).json("Already exist");
+    }else{
     const playlist = new Playlistname({ name,userId });
 
   
     await playlist.save();
 
-    res.status(201).json(playlist);
+    res.status(201).json(playlist);}
   } catch (error) {
     console.error('Error inserting playlist:', error);
     res.status(500).json({ error: 'Failed to insert playlist' });
@@ -509,12 +522,15 @@ router.post('/addmood', async (req, res) => {
   try {
     const { name } = req.body;
    
-
+    const check= await Mood.findOne({name})
+    if(check){
+      res.status(204).json("Already exist");
+    }else{
 
     const mood = new Mood({ name});
 await mood.save();
 
-    res.status(201).json(mood);
+    res.status(201).json(mood);}
   } catch (error) {
     console.error('Error inserting mood:', error);
     res.status(500).json({ error: 'Failed to insert mood' });
