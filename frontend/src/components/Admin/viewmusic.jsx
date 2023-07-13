@@ -3,9 +3,9 @@ import { MdPlayArrow, MdPause, MdShuffle, MdSkipPrevious, MdSkipNext, MdRepeat, 
 import { ImMusic } from "react-icons/im";
 import axios from 'axios';
 import Sidebar from './Sidebar';
-import { RiDeleteBinLine, RiMusic2Fill } from 'react-icons/ri';
+import { RiDeleteBinLine, RiEditCircleFill, RiMusic2Fill } from 'react-icons/ri';
 import { TbFolderPlus, TbRepeatOnce } from 'react-icons/tb';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import ReactAudioPlayer from 'react-audio-player';
 
 import { FiShare2 } from 'react-icons/fi';
@@ -44,8 +44,10 @@ const MusicPlayer = () => {
       }
     }
   };
-
-
+const navigate=useNavigate()
+const handleeditmusic=(id)=>{
+navigate(`/editmusic?id=${id}`)
+}
 
   //end fav
   const fetchduration=()=>{ trackList.forEach(async(audio) => {
@@ -171,7 +173,7 @@ if(trackList.length===0) return(<Sidebar><h1 className='text-3xl text-gray-600 t
              <img
                src={`http://localhost:8000/${currentTrack.thumbnailPath}`}
                alt="Thumbnail"
-               className="w-64 h-64 object-cover rounded-lg border-4 border-gray-800 shadow-2xl"
+               className="w-64 h-64 rounded-lg border-4 border-gray-800 shadow-2xl"
              />
            ) : (
              <ImMusic className="w-56 h-56 text-indigo-300" />
@@ -316,9 +318,15 @@ if(trackList.length===0) return(<Sidebar><h1 className='text-3xl text-gray-600 t
             {tableduration[track._id] ? formatTime(tableduration[track._id]) : 'Loading...'}
           </td>
           <td className="py-4 px-6">
+          <button
+                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded"
+                        onClick={() => handleeditmusic(track._id)}
+                      >
+                        <RiEditCircleFill />
+                      </button>
             
           <button
-                        className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-2 rounded"
+                        className="ml-2 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-2 rounded"
                         onClick={() => handleDeletemusic(track._id)}
                       >
                         <RiDeleteBinLine />

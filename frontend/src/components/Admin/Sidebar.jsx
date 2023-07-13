@@ -91,7 +91,7 @@ export default function Sidebar({ children }) {
   return (
     <div className="flex bg-gray-900 text-white max-h-fit">
       {/* Sidebar */}
-      <div className={` sticky top-0 min-h-screen bg-transparent shadow-2xl mr-2
+      <div className={` sticky top-0 h-screen  overflow-y-auto bg-transparent shadow-2xl mr-2 
        w-1/6 ${showSidebar ? '' : 'hidden'}`}>
         {/* Sidebar content */}
         <div className="p-4 ">
@@ -268,7 +268,7 @@ export default function Sidebar({ children }) {
             <div className="relative inline-block ml-2">
              
               {showDropdownn && (
-                <div className="absolute border-4 border-gray-600 right-0 mt-6 py-2 w-44 bg-transparent rounded-md shadow-lg z-10">
+                <div className="absolute border-4 border-gray-600 right-0 mt-6 py-2 w-44 bg-gray-900 rounded-md shadow-lg z-10">
                  
                   <Link
                     to="/admin/profile"

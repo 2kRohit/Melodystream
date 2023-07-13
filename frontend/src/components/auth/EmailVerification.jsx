@@ -95,6 +95,7 @@ export default function EmailVerification() {
 
     updateNotification("success", message);
     localStorage.setItem("auth-token", userResponse.token);
+    localStorage.setItem("role", "user");
     isAuth();
   };
 

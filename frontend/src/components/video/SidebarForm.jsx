@@ -105,7 +105,7 @@ export default function Sidebar({ children }) {
           </Link><div className='mt-0'>
             
           <div className='text-center  '>
-          {authInfo.profile?.profilePicture ? (
+          {formdata.profilePicture ? (
               <>
               <img
                 src={`http://localhost:8000/uploads/profile/${formdata.profilePicture}`}
@@ -114,13 +114,13 @@ export default function Sidebar({ children }) {
                 onClick={toggleDropdownn}
               />
              <div className=''> {formdata.name}</div>
-             <div onClick={()=>{navigate(`/user/userprofile?uId=${userId}`)}} className='italic text-sm text-gray-400 cursor-pointer'> <span>{countsubscriber}&bull;Subscribers</span>
+             <div onClick={()=>{navigate(`/user/userprofile?uId=${userId}`)}} className=' text-sm text-gray-400 cursor-pointer'> <span>{countsubscriber} Subscribers</span>
           </div>
              </>
             ) : (<><button onClick={toggleDropdownn}> 
              <FaUserCircle className="w-24 h-24 text-gray-500 mx-auto" /></button>
               <div className=''> {formdata.name}</div>
-              <div className=''> {formdata.email}</div>
+              <div onClick={()=>{navigate(`/user/userprofile?uId=${userId}`)}} className=' text-sm text-gray-400 cursor-pointer'> <span>{countsubscriber} Subscribers</span></div>
               </>
             )}</div></div>
           <div className="border-t border-gray-600 mb-2"></div>
@@ -217,7 +217,7 @@ onChange={handleChange}
             <div className="relative inline-block ml-2">
              
               {showDropdownn && (
-                <div className="absolute right-0 mt-6 py-2 w-44 border-4 border-gray-600 bg-transparent rounded-md shadow-lg z-10">
+                <div className="absolute right-0 mt-6 py-2 w-44 border-4 border-gray-600 bg-gray-900 rounded-md shadow-lg z-10">
                  
                   <Link
                     to="/profile"

@@ -59,7 +59,7 @@ if(musicList.length===0){
                   <img
                     src={`http://localhost:8000/${music.thumbnailPath}`}
                     alt={music.title}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full "
                   />
                 ) : (
                   <div className="flex items-center justify-center w-full h-full bg-gray-700">
@@ -72,8 +72,8 @@ if(musicList.length===0){
                     Play
                   </button>
                 </div>
-                <div className="absolute bottom-4 left-4">
-                  <p className="text-lg font-bold text-white truncate">{music.title}</p>
+                <div className="absolute bottom-4 left-4 w-full">
+                <marquee scrollamount="3">   <p className="text-lg font-bold text-white truncate">{music.title}</p></marquee>
                   <div className="flex items-center text-sm text-gray-300 mt-1">
                 
                     <span>{music.artist}</span>

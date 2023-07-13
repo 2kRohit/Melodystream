@@ -161,7 +161,7 @@ const HomePage = () => {
     <Sidebar>
       <div className="container mx-auto bg-gray-900 text-white">
         {/* Categories */}
-        <h1 className='text-center text-3xl text-blue-500 italic p-0 mb-1 mt-0 font-semibold'>Watch History</h1> 
+        <h1 className='text-center text-2xl text-indigo-500 italic p-0 mb-1 mt-0 font-bold'>Watch History</h1> 
         <div onClick={clearhistory} className='text-red-500 -mt-9 mb-4 hover:text-red-700 cursor-pointer'> {videos.length !== 0 ?'clear all':''}</div> 
         {/* Videos */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 mt-0">

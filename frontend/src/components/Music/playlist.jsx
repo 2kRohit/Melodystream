@@ -79,7 +79,7 @@ const getRandomGradient = () => {
   return (
     <Sidebar>
       <div className="bg-gray-900 text-white p-6">
-        <h1 className="text-3xl mx-auto text-center font-semibold mb-4 italic text-blue-500">Playlist</h1>
+        <h1 className="text-2xl mx-auto text-center font-bold mb-4 italic text-indigo-500">Playlist</h1>
         <div className="flex items-center justify-end mb-4">
           <button
             className="text-gray-300 text-3xl cursor-pointer bg-transparent border-none outline-none"

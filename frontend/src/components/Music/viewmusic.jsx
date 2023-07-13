@@ -212,7 +212,7 @@ useEffect(() => {
              <img
                src={`http://localhost:8000/${currentTrack.thumbnailPath}`}
                alt="Thumbnail"
-               className="w-64 h-64 object-cover rounded-lg border-4 border-gray-800 shadow-2xl"
+               className="w-64 h-64  rounded-lg border-4 border-gray-800 shadow-2xl"
              />
            ) : (
              <ImMusic className="w-56 h-56 text-indigo-300" />

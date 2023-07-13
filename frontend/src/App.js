@@ -70,6 +70,7 @@ import Admincontact from "./components/Admin/Contact"
 import Adminverifiedcontact from "./components/Admin/Verifiedcontact"
 import Verifiercontact from "./components/Verifier/Contact"
 import Verifierverifiedcontact from "./components/Verifier/Verifiedcontact"
+import Editmusic from './components/Admin/Editmusic'
 export default function App() {
   return (
     <>
@@ -141,6 +142,7 @@ export default function App() {
         <Route path="/all" element={<All/>}/>
         <Route path="admin/contact" element={<Admincontact/>}/>
         <Route path="admin/verifiedcontact" element={<Adminverifiedcontact/>}/>
+        <Route path="/editmusic" element={<Editmusic/>}/>
         <Route path="verifier/contact" element={<Verifiercontact/>}/>
         <Route path="verifier/verifiedcontact" element={<Verifierverifiedcontact/>}/>
         <Route path="*" element={<NotFound />} />

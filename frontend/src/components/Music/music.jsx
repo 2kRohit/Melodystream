@@ -153,7 +153,7 @@ useEffect(() => {
   return (
     <Sidebar>
       <div className="container mx-auto px-4 py-0 bg-gray-900 text-white">
-      <h1 className="text-xl text-white font-bold mb-4 italic">Suggestions for you</h1>
+      <h1 className="text-xl text-gray-300 font-bold mb-4 italic">Suggestions for you</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
           {recommendation.slice(0, 5).map((music) => (
             <div
@@ -166,7 +166,7 @@ useEffect(() => {
                   <img
                     src={`http://localhost:8000/${music.thumbnailPath}`}
                     alt={music.title}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full "
                   />
                 ) : (
                   <div className="flex items-center justify-center w-full h-full bg-gray-700">
@@ -179,11 +179,11 @@ useEffect(() => {
                     Play
                   </button>
                 </div>
-                <div className="absolute bottom-4 left-4">
-                  <p className="text-lg font-bold text-white truncate">{music.title}</p>
-                  <div className="flex items-center text-sm text-gray-300 mt-1">
+                <div className="absolute bottom-0 left-0 w-full bg-black bg-opacity-75">
+              <marquee scrollamount="3">  <p  className="text-lg text-green-500 font-bold truncate">{music.title}</p></marquee>  
+                  <div className="flex items-center text-sm text-gray-300 ">
                 
-                    <span>{music.artist}</span>
+                    <span className='ml-2 text-white'> {music.artist}</span>
                   </div>
                 </div>
               </div>
@@ -191,7 +191,7 @@ useEffect(() => {
           ))}
         </div>
 
-        <h1 className="text-xl text-white font-bold mb-4 mt-4 italic">Discover Music</h1>
+        <h1 className="text-xl text-gray-300 font-bold mb-4 mt-4 italic">Discover Music</h1>
         <Link to="/all" className='-mt-10 float-right text-gray-500 font-bold'>show all</Link>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
           {musicList.slice(0, 10).map((music) => (
@@ -205,7 +205,7 @@ useEffect(() => {
                   <img
                     src={`http://localhost:8000/${music.thumbnailPath}`}
                     alt={music.title}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full "
                   />
                 ) : (
                   <div className="flex items-center justify-center w-full h-full bg-gray-700">
@@ -218,11 +218,11 @@ useEffect(() => {
                     Play
                   </button>
                 </div>
-                <div className="absolute bottom-4 left-4">
-                  <p className="text-lg font-bold text-white truncate">{music.title}</p>
-                  <div className="flex items-center text-sm text-gray-300 mt-1">
+                <div className="absolute bottom-0 left-0 bg-black bg-opacity-75 w-full">
+                <marquee scrollamount="3" className=''>   <p className="text-lg font-bold text-green-500 truncate">{music.title}</p></marquee>
+                  <div className="flex items-center text-sm text-gray-300 ">
                 
-                    <span>{music.artist}</span>
+                    <span className='ml-2 text-white'>{music.artist}</span>
                   </div>
                 </div>
               </div>
@@ -231,7 +231,7 @@ useEffect(() => {
         </div>
 
 {/* profile */}
-<h1 className="text-xl text-white font-bold mb-4 mt-4 italic">Artist</h1>
+<h1 className="text-xl text-gray-300 font-bold mb-4 mt-4 italic">Artist</h1>
 <Link to="/artist" className='-mt-10 float-right text-gray-500 font-bold'>show all</Link>
 
 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
@@ -246,7 +246,7 @@ useEffect(() => {
                   <img
                     src={`http://localhost:8000/${music.imagePath}`}
                     alt={music.name}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full "
                   />
                 ) : (
                   <div className="flex items-center justify-center w-full h-full bg-gray-700">
@@ -259,8 +259,8 @@ useEffect(() => {
                     Play
                   </button>
                 </div>
-                <div className="absolute bottom-4 left-4">
-                  <p className="text-lg font-bold text-white truncate">{music.name}</p>
+                <div className="absolute bottom-0 left-0 bg-black bg-opacity-75 w-full">
+                  <p className="text-base font-bold text-white truncate">{music.name}</p>
                   <div className="flex items-center text-sm text-gray-300 mt-1">
                 
                
@@ -273,7 +273,7 @@ useEffect(() => {
 
 
 {/* Category */}
-<h1 className="text-xl text-white font-bold mb-4 mt-4 italic">Category</h1>
+<h1 className="text-xl text-gray-300 font-bold mb-4 mt-4 italic">Category</h1>
 <Link to="/categorymusic" className='-mt-10 float-right text-gray-500 font-bold'>show all</Link>
 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
           {category.slice(0,5).map((music) => (
@@ -307,7 +307,7 @@ useEffect(() => {
         </div> 
 
    {/* Mood */}
-<h1 className="text-xl text-white font-bold mb-4 mt-4 italic">Mood</h1>
+<h1 className="text-xl text-gray-300 font-bold mb-4 mt-4 italic">Mood</h1>
 <Link to="/mood" className='-mt-10 float-right text-gray-500 font-bold'>show all</Link>
 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
           {mood.slice(0, 5).map((music) => (
@@ -342,7 +342,7 @@ useEffect(() => {
 
 
 {/* Language */}
-<h1 className="text-xl text-white font-bold mb-4 mt-4 italic">Language</h1>
+<h1 className="text-xl text-gray-300 font-bold mb-4 mt-4 italic">Language</h1>
 <Link to="/language" className='-mt-10 float-right text-gray-500 font-bold'>show all</Link>
 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
           {language.slice(0, 5).map((music) => (

@@ -40,7 +40,7 @@ const MusicList = () => {
   return (
     <Sidebar>
       <div className="container mx-auto px-4 py-0 bg-gray-900 text-white">
-        <h1 className="text-3xl font-bold mb-4">Explore Music</h1>
+        <h1 className="text-2xl text-gray-300 italic font-bold mb-4">Explore Music</h1>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
           {musicList.map((music) => (
             <div
@@ -53,7 +53,7 @@ const MusicList = () => {
                   <img
                     src={`http://localhost:8000/${music.thumbnailPath}`}
                     alt={music.title}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full "
                   />
                 ) : (
                   <div className="flex items-center justify-center w-full h-full bg-gray-700">
@@ -66,11 +66,11 @@ const MusicList = () => {
                     Play
                   </button>
                 </div>
-                <div className="absolute bottom-4 left-4">
-                  <p className="text-lg font-bold text-white truncate">{music.title}</p>
-                  <div className="flex items-center text-sm text-gray-300 mt-1">
+                <div className="absolute bottom-0 left-0 bg-black bg-opacity-75 w-full">
+                <marquee scrollamount="3">     <p className="text-lg font-bold text-green-500 truncate">{music.title}</p></marquee>
+                  <div className="flex items-center text-sm text-gray-300 ">
                 
-                    <span>{music.artist}</span>
+                    <span className='ml-2'>{music.artist}</span>
                   </div>
                 </div>
               </div>

@@ -86,7 +86,7 @@ const ViewVerifiedVideos = () => {
   if (!video) {
     return (
       <Sidebar>
-         <h1 className='text-center text-3xl text-blue-600 italic p-2 mb-1 mt-1'>Video Details</h1>
+         <h1 className='text-center text-2xl text-indigo-500 italic p-2 mb-1 mt-1 font-bold'>Video Details</h1>
         <div className="flex items-center justify-center h-full">
           <p className="text-gray-500 text-xl">Loading...</p>
         </div>
@@ -96,7 +96,7 @@ const ViewVerifiedVideos = () => {
 
   return (
     <SidebarForm>
-      <h1 className='text-center text-3xl text-blue-500 italic p-2 mb-1 mt-1 font-semibold'>Video Details</h1>
+      <h1 className='text-center text-2xl text-indigo-500 italic p-2 mb-1 mt-1 font-bold'>Video Details</h1>
       <div className="flex justify-center items-center text-justify">
         <div className="max-w-6xl w-full bg-gray-900 rounded-lg overflow-hidden">
           <div className="flex">

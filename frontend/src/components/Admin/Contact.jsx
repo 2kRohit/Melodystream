@@ -3,9 +3,11 @@ import axios from 'axios';
 import { FiPlus, FiSearch, FiTrash } from 'react-icons/fi';
 import Sidebar from './Sidebar';
 import { BsPencilSquare} from 'react-icons/bs';
+import { ImSpinner3 } from 'react-icons/im';
 
 const CategoryForm = () => {
   const [name, setName] = useState('');
+  const [busy,setbusy]=useState(false)
   const [categories, setCategories] = useState([]);
   const [showAddCategory, setShowAddCategory] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
@@ -25,11 +27,11 @@ const CategoryForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+setbusy(!busy)
     try {
 
      const res= await axios.post(`http://localhost:8000/api/verifier/verifycontact/${contactid}/${name}` );
-     
+     setbusy(false)
 
       setName('');
       alert(' inserted successfully!');
@@ -97,12 +99,13 @@ const CategoryForm = () => {
                     />
                   </div>
                   <div className="flex justify-center space-x-4">
-                    <button
+                {!busy?(    <button
                       type="submit"
                       className="bg-blue-500 hover:bg-green-600 text-white font-medium py-2 px-4 rounded-md"
                     >
                       Submit
                     </button>
+                    ):<button className="bg-blue-500 hover:bg-green-600 text-white font-medium py-2 px-4 rounded-md"><ImSpinner3 className="animate-spin" /></button> }
                     <button
                       type="button"
                       className="bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-4 rounded-md"

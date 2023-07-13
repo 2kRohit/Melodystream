@@ -68,8 +68,8 @@ const VideoList = () => {
     <SidebarForm>
       <div className="bg-gray-900 min-h-screen flex flex-col justify-start items-center py-0">
         
-        <div className="w-full max-w-3xl overflow-x-auto border-4 border-gray-600 shadow-2xl">
-        <h2 className="text-center text-2xl text-blue-500 italic p-1 mb-0 mt-2 font-semibold">Unverified Video List</h2>
+        <div className="w-full  overflow-x-auto border-4 border-gray-600 shadow-2xl">
+        <h2 className="text-center text-2xl text-indigo-500 italic p-1 mb-0 mt-2 font-bold">Unverified Video List</h2>
           <div className="flex items-center justify-between mb-0">
             <div className="relative flex items-center mt-0 ">
              

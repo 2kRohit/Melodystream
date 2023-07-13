@@ -40,7 +40,7 @@ const MusicList = () => {
   return (
     <Sidebar>
       <div className="container mx-auto px-4 py-0 bg-gray-900 text-white">
-        <h1 className="text-3xl text-center text-blue-500 font-semibold mb-4 italic">Artist</h1>
+        <h1 className="text-3xl text-center text-gray-300 font-bold mb-4 italic">Artist</h1>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
           {musicList.map((music) => (
             <div
@@ -66,8 +66,8 @@ const MusicList = () => {
                     Play
                   </button>
                 </div>
-                <div className="absolute bottom-4 left-4">
-                  <p className="text-lg font-bold text-white truncate">{music.name}</p>
+                <div className="absolute bottom-0 left-0 bg-black bg-opacity-75 w-full">
+                  <p className="text-base font-bold text-white truncate">{music.name}</p>
                   <div className="flex items-center text-sm text-gray-300 mt-1">
                 
                

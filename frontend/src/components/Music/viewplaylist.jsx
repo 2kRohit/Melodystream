@@ -95,7 +95,7 @@ const MusicPlayer = () => {
   const handlefavourite = async (mId) => {
     try {
       const response = await axios.post(`http://localhost:8000/api/music/${mId}/favourite/${userId}`);
-      if(mId===currentTrack._id){ nextTrackHandler ()}
+     
       fetchMusic()
    // fetchfavouritestatus()
     } catch (error) {
@@ -238,7 +238,7 @@ if(trackList.length===0) return(<Sidebar><h1 className='text-3xl text-gray-600 t
              <img
                src={`http://localhost:8000/${currentTrack.thumbnailPath}`}
                alt="Thumbnail"
-               className="w-64 h-64 object-cover rounded-lg border-4 border-gray-800 shadow-2xl"
+               className="w-64 h-64  rounded-lg border-4 border-gray-800 shadow-2xl"
              />
            ) : (
              <ImMusic className="w-56 h-56 text-indigo-300" />

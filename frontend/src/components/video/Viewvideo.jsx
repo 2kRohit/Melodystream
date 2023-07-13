@@ -732,13 +732,13 @@ onClick={report ? handleunreport : handleReportClick}
                           {comment.replies.map((reply) => (
                             <div key={reply._id} className="mb-2">
                               <div className="flex items-center">
-                              {reply && reply.user.profilePicture? (
-                                <img onClick={()=>{navigate(`/user/userprofile?uId=${reply.user._id}`)}}
+                              {reply && reply.user?.profilePicture? (
+                                <img onClick={()=>{navigate(`/user/userprofile?uId=${reply.user?._id}`)}}
                                   className="w-8 h-8 rounded-full mr-2 cursor-pointer"
                                   src={`http://localhost:8000/uploads/profile/${reply.user?.profilePicture}`}//{reply.user.profilePicture} // Assuming the profile picture is available in the user object
                                   alt="Profile"
                                 />):(<FaUserCircle className="w-8 h-8 text-gray-500 mr-2 cursor-pointer"
-                                onClick={()=>{navigate(`/user/userprofile?uId=${reply.user._id}`)}} />)}
+                                onClick={()=>{navigate(`/user/userprofile?uId=${reply.user?._id}`)}} />)}
                                 <div>
                                 <div className="flex items-center mt-2">      <p className="text-white font-bold">{reply.user?.name}</p>
                                   <div onClick={()=>{ deletereply(comment._id,reply._id)}} className='text-gray-500 text-sm mr-2 p-2 mt-0.5

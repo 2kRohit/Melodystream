@@ -4,6 +4,7 @@ import axios from 'axios';
 import Sidebar from './Sidebar';
 import SidebarForm from './SidebarForm';
 import { useAuth, useNotification } from '../../hooks';
+import { ImSpinner3 } from 'react-icons/im';
 
 const UploadVideo = () => {
   const [formData, setFormData] = useState({
@@ -20,7 +21,7 @@ const UploadVideo = () => {
   const { updateNotification } = useNotification();
   const [errors, setErrors] = useState({});
   const [categories, setCategories] = useState([]);
-
+const [busy,setbusy]=useState(false)
   useEffect(() => {
     fetchCategories();
   }, []);
@@ -92,7 +93,7 @@ const UploadVideo = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+setbusy(!busy)
     const isValid = validateForm();
 
     if (isValid) {
@@ -116,7 +117,7 @@ const UploadVideo = () => {
         const response = await axios.post('http://localhost:8000/api/video/upload-video', data);
         updateNotification('success', response.message);
         alert('Video uploaded successfully');
-
+        setbusy(false)
         // Reset form
         setFormData({
           title: '',
@@ -162,7 +163,7 @@ const UploadVideo = () => {
   return (
     <SidebarForm>
       <div className="max-w-lg mx-auto bg-gray-900 p-12 shadow-2xl rounded-lg border-4 border-gray-600 mt-0">
-        <h2 className="text-2xl font-semibold mb-4 -mt-5 text-blue-500 text-center italic">Upload Video</h2>
+        <h2 className="text-2xl font-bold mb-4 -mt-5 text-indigo-500 text-center italic">Upload Video</h2>
  
         <form onSubmit={handleSubmit} className="space-y-2">
           <div>
@@ -253,13 +254,14 @@ const UploadVideo = () => {
               Thumbnail File (optional)
             </label>
             <Dropzone onDrop={handleThumbnailChange} fileUploaded={!!formData.thumbnailFile} />
-          </div>
+          </div>{!busy? (
           <button
             type="submit"
             className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:ring"
           >
             Upload
           </button>
+          ):<button className="bg-cyan-500 hover:bg-cyan-400 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"><ImSpinner3 className="animate-spin" /></button> }
         </form>
       </div>
     </SidebarForm>

@@ -157,7 +157,7 @@ const HomePage = () => {
                     <FaUserCircle className="w-32 h-32 text-gray-500 mr-2 mx-auto" />
                   )}
                  <p className='text-2xl mx-auto text-center italic'>{user.name}</p>
-                 <p className=' mx-auto text-center text-gray-400 cursor-pointer ' onClick={()=>{setshow(!show)}}>{countsubscriber}&bull;Subscribers
+                 <p className=' mx-auto text-center text-gray-400 cursor-pointer ' onClick={()=>{setshow(!show)}}>{countsubscriber} Subscribers
                   <span className={`${show?'':'hidden'}`}><Showuser prop1={'Subscribers'} prop2={uid}  />
          </span></p>
 
@@ -168,7 +168,7 @@ const HomePage = () => {
                   <div className='border-b border-0 border-gray-800 mt-4'></div>
                   </div>
         {/* Videos */}
-        <h1 className='text-blue-500 text-2xl italic text-center mt-2 mb-4'>Uploaded Videos</h1>
+        <h1 className='text-blue-500 font-bold text-2xl italic text-center mt-2 mb-4'>Uploaded Videos</h1>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 mt-4">
         {videos.length === 0 ? (
     <div className="text-center text-gray-500">

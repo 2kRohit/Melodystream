@@ -9,8 +9,9 @@ const History= require('../models/history');
 const Report = require('../models/report');
 const Musichistory=require("../models/musichistory")
 const Playlist=require("../models/playlist")
-
-
+const Contact=require("../models/contact")
+const Music=require("../models/music")
+const fs = require('fs');
 
 const { isValidObjectId } = require("mongoose");
 const User=require('../models/user');
@@ -128,4 +129,92 @@ if (!user) return res.json('invalid user')
       res.status(500).json({ message: 'An error occurred ' });
     }
   })
+
+  router.get('/count',async(req,res)=>{
+    try{
+    usercount=await User.find({role:'user'})
+    verifiedvideocount=await Video.find({status:'verified'})
+    notverifiedvideocount=await Video.find({status:'unverified'})
+    rejectedvideocount=await Video.find({status:'rejected'})
+    verifiercount=await User.find({role:'verifier'})
+    musiccount=await Music.find()
+    video=await Video.find()
+    contact=await Contact.find()
+    report=await Report.find()
+    res.status(200).json({ user:usercount.length,
+      verifier:verifiercount.length,
+      verifiedvideocount:verifiedvideocount.length,
+      notverifiedvideocount:notverifiedvideocount.length,
+      rejectedvideocount:rejectedvideocount.length,
+      musiccount: musiccount.length,
+      video:video.length,
+      report:report.length,
+      contact:contact.length
+    });
+    }
+    catch (error) {
+    
+    }
+  })
+  router.get('/editmusic/:id',async(req,res)=>{
+    try
+    {
+    const {id}=req.params
+    const music=await Music.findById(id)
+    res.status(200).json(music)
+    }
+    catch(error){
+      console.error(error);
+      res.status(500).json({ message: 'An error occurred' });
+    }
+  })
+  const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, './uploads/music');
+    },
+    filename: function (req, file, cb) {
+      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+      cb(null, uniqueSuffix + path.extname(file.originalname));
+    },
+  });
+  
+  const upload = multer({ storage });
+  
+ 
+  router.post('/changemusic/:id', upload.fields([{ name: 'musicFile', maxCount: 1 }, { name: 'thumbnailFile', maxCount: 1 }]), async (req, res) => {
+    try {
+      const {id}=req.params
+      const { title, description, tags, category,language,artist,mood } = req.body;
+      const { musicFile, thumbnailFile } = req.files;
+      const musicPath = musicFile? musicFile[0].path : null;
+      const thumbnailPath = thumbnailFile ? thumbnailFile[0].path : null;
+     const music= await Music.findById(id)
+        music.title=title
+        music.description=description
+        music.mood=mood
+        music.category=category
+        music.language=language
+        music.artist=artist
+        if(musicPath){
+          const musicFilePath = path.join(__dirname,'..', music.musicPath);
+        fs.unlinkSync(musicFilePath);
+music.musicPath=musicPath
+        }
+        if(thumbnailFile)
+       {
+        const thumbnailFilePath = path.join(__dirname,'..', music.thumbnailPath);
+        fs.unlinkSync(thumbnailFilePath);   
+music.thumbnailPath=thumbnailPath
+       }
+
+  
+      await music.save();
+  
+      res.status(201).json({ message: 'Music updated successfully' });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: error });
+    }
+  });
+
 module.exports = router;

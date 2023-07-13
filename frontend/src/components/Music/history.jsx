@@ -103,7 +103,7 @@ if(musicList.length===0) return (<Sidebar><h1 className='text-3xl text-gray-600 
   return (
     <Sidebar>
       <div className="container mx-auto px-4 py-8 bg-gray-900 text-white">
-        <h1 className="text-3xl font-bold mb-8 text-center text-blue-500 italic">Your History</h1>
+        <h1 className="text-2xl font-bold mb-8 text-center text-gray-300 italic">History</h1>
         <div onClick={clearhistory} className='text-red-500 -mt-9 mb-4 hover:text-red-700 cursor-pointer'> {musicList.length !== 0 ?'clear all':''}</div> 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
           {musicList.map((music) => (
@@ -118,7 +118,7 @@ if(musicList.length===0) return (<Sidebar><h1 className='text-3xl text-gray-600 
                   <img
                     src={`http://localhost:8000/${music.thumbnailPath}`}
                     alt={music.title}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full "
                   />
                 ) : (
                   <div className="flex items-center justify-center w-full h-full bg-gray-700">
@@ -131,11 +131,11 @@ if(musicList.length===0) return (<Sidebar><h1 className='text-3xl text-gray-600 
                     Play
                   </button>
                 </div>
-                <div className="absolute bottom-4 left-4">
-                  <p className="text-lg font-bold text-white truncate">{music.title}</p>
-                  <div className="flex items-center text-sm text-gray-300 mt-1">
+                <div className="absolute bottom-0 left-0 bg-black bg-opacity-75 w-full">
+                <marquee scrollamount="3">   <p className="text-lg font-bold text-green-500 truncate">{music.title}</p></marquee>
+                  <div className="flex items-center  ">
                 
-                    <span>{music.artist}</span><br/>
+                    <span className='text-base text-white ml-2'>{music.artist}</span><br/>
                 
                   </div>
                   

@@ -188,7 +188,7 @@ const [recommendation,setrecommendation]=useState([])
           </div>
         </div>
 {/* Recomendation*/}
-<h1 className="text-xl text-gray-400 font-bold mb-2 -mt-5 italic">Suggested for you</h1>
+<h1 className="text-xl text-indigo-500 font-bold mb-2 -mt-5 italic">Suggested for you</h1>
 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 mt-2">
           {recommendation.slice(0,8).map((video) => (
             <div
@@ -246,7 +246,8 @@ const [recommendation,setrecommendation]=useState([])
         </div>
         <div className='border-b border-gray-700 mt-4'></div>
         {/* Videos */}
-        <h1 className="text-xl font-bold text-gray-400 mt-2 italic">Explore Videos</h1>
+        <h1 className="text-xl font-bold text-indigo-600 mt-2 italic">Explore Videos</h1>
+       
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 mt-2">
           {videos.map((video) => (
             <div

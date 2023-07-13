@@ -13,7 +13,7 @@ import { CgLock, CgProfile } from 'react-icons/cg';
 import axios from 'axios';
 export default function Sidebar({ children }) {
   const navigate = useNavigate();
-  const count=5
+
   const { authInfo,handleLogout } = useAuth();
   const { isLoggedIn } = authInfo;
   const isVerified = authInfo.profile?.isVerified;
@@ -196,12 +196,7 @@ onChange={handleChange}
           {/* User Profile Picture or User Icon */}
           <div className="flex items-center ">
            
-           <TbBellFilled className="w-7 h-7 text-gray-400 " />
-      {count && count > 0 && (
-        <div className="absolute top-0 right-0 bg-red-500 text-white font-extrabold rounded-full px-1 mr-16 mt-2">
-          <p style={{ fontSize: '10px' }}>{count}</p>
-        </div>
-      )}
+           
              
             
            <button onClick={toggleDropdownn}> 

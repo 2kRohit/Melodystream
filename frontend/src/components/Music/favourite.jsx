@@ -208,7 +208,7 @@ useEffect(() => {
 if(trackList.length===0) return(<Sidebar><h1 className='text-3xl text-gray-600 text-center mx-auto align-middle'>Your favourite songs are empty...</h1></Sidebar>)
   return (
     <Sidebar>
-        <h1 className='text-3xl text-blue-500 text-center italic font-semibold'>Favourite Songs</h1>
+        <h1 className='text-2xl text-indigo-500 text-center italic font-bold'>Favourite Songs</h1>
       <div className="container mx-auto py-6  ">
         {currentTrack && (
          <div className="flex flex-col pl-6 text-justify items-center">
@@ -217,7 +217,7 @@ if(trackList.length===0) return(<Sidebar><h1 className='text-3xl text-gray-600 t
              <img
                src={`http://localhost:8000/${currentTrack.thumbnailPath}`}
                alt="Thumbnail"
-               className="w-64 h-64 object-cover rounded-lg border-4 border-gray-800 shadow-2xl"
+               className="w-64 h-64  rounded-lg border-4 border-gray-800 shadow-2xl"
              />
            ) : (
              <ImMusic className="w-56 h-56 text-indigo-300" />

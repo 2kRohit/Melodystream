@@ -231,7 +231,7 @@ export default function Sidebar({ children }) {
              
             
            <button onClick={toggleDropdownn}> 
-             <MdOutlineSettings className="w-7 h-7 text-blue-500 mr-2  hover:text-blue-600 " />
+             <MdOutlineSettings className="w-7 h-7  " />
            
              </button>
          
@@ -239,7 +239,7 @@ export default function Sidebar({ children }) {
             <div className="relative inline-block ml-2">
              
               {showDropdownn && (
-                <div className="absolute right-0 mt-6 py-2 w-44 border-4 border-gray-600 bg-transparent rounded-md shadow-lg z-10">
+                <div className="absolute right-0 mt-6 py-2 w-44 border-4 border-gray-600 bg-gray-900 rounded-md shadow-lg z-10">
                  
                   <Link
                     to="/verifier/profile"
